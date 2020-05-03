@@ -42,7 +42,7 @@
         The http request will be going to the LcsApiUri "https://lcsapi.lcs.dynamics.com" (NON-EUROPE).
         
     .LINK
-        Get-LcsDatabaseRefreshStatus
+        Get-LcsDatabaseOperationStatus
         
     .NOTES
         Tags: Environment, Url, Config, Configuration, LCS, Upload, Api, AAD, Token, Deployment, Deployable Package
@@ -78,7 +78,7 @@ function Start-LcsDatabaseRefresh {
     $client = New-Object -TypeName System.Net.Http.HttpClient
     $client.DefaultRequestHeaders.Clear()
 
-    $deployUri = "$LcsApiUri/databasemovement/v1/refresh/project//$($ProjectId)/source/$($SourceEnvironmentId)/target/$($TargetEnvironmentId)"
+    $deployUri = "$LcsApiUri/databasemovement/v1/refresh/project/$($ProjectId)/source/$($SourceEnvironmentId)/target/$($TargetEnvironmentId)"
 
     $request = New-JsonRequest -Uri $deployUri -Token $BearerToken -HttpMethod "POST"
 
@@ -89,9 +89,15 @@ function Start-LcsDatabaseRefresh {
         Write-PSFMessage -Level Verbose -Message "Extracting the response received from LCS."
         $responseString = Get-AsyncResult -task $result.Content.ReadAsStringAsync()
 
-        $refreshJob = ConvertFrom-Json -InputObject $responseString -ErrorAction SilentlyContinue
-    
-        Write-PSFMessage -Level Verbose -Message "Extracting the response received from LCS."
+        try {
+            $refreshJob = ConvertFrom-Json -InputObject $responseString -ErrorAction SilentlyContinue
+        }
+        catch {
+            Write-PSFMessage -Level Critical -Message "$responseString"
+        }
+
+        Write-PSFMessage -Level Verbose -Message "Extracting the response received from LCS." -Target $refreshJob
+        
         if (-not ($result.StatusCode -eq [System.Net.HttpStatusCode]::OK)) {
             if (($refreshJob) -and ($refreshJob.ErrorMessage)) {
                 $errorText = ""

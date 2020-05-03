@@ -3,7 +3,7 @@
     RootModule   = 'd365fo.tools.psm1'
 
     # Version number of this module.
-    ModuleVersion     = '0.5.84'
+    ModuleVersion     = '0.6.14'
 
     # ID used to uniquely identify this module
     GUID              = '7c7b26d4-f764-4cb0-a692-459a0a689dbb'
@@ -31,6 +31,7 @@
 		, @{ ModuleName = 'AzureAd'; ModuleVersion = '2.0.1.16' }
 		, @{ ModuleName = 'PSNotification'; ModuleVersion = '0.5.3' }
 		, @{ ModuleName = 'PSOAuthHelper'; ModuleVersion = '0.2.3' }
+		, @{ ModuleName = 'ImportExcel'; ModuleVersion = '7.1.0' }
 	)
 	
 
@@ -88,7 +89,9 @@
 						'Get-D365AzureStorageFile',
 						'Get-D365BroadcastMessage',
 						'Get-D365BroadcastMessageConfig',
+
 						'Get-D365ClickOnceTrustPrompt',
+						'Get-D365CompilerResult',
 
 						'Get-D365Database',
 						'Get-D365DatabaseAccess',
@@ -117,12 +120,13 @@
 						'Get-D365LcsApiToken',
 						'Get-D365LcsAssetValidationStatus',
 						'Get-D365LcsDatabaseBackups',
-						'Get-D365LcsDatabaseRefreshStatus',
+						'Get-D365LcsDatabaseOperationStatus',
 						'Get-D365LcsDeploymentStatus',
 						'Get-D365LcsEnvironment',
 						'Get-D365LogicAppConfig',
 
 						'Get-D365MaintenanceMode',
+						'Get-D365Model',
 						'Get-D365Module',
 						'Get-D365OfflineAuthenticationAdminEmail',
 
@@ -151,6 +155,8 @@
 						'Get-D365Url',
 						'Get-D365User',
 						'Get-D365UserAuthenticationDetail',
+
+						'Get-D365VisualStudioCompilerResult',
 						'Get-D365WindowsActivationStatus',
 
 						'Import-D365AadUser',
@@ -165,15 +171,19 @@
 						'Invoke-D365AzureStorageDownload',
 						'Invoke-D365AzureStorageUpload',
 
+						'Invoke-D365CompilerResultAnalyzer',
+						
 						'Invoke-D365DataFlush',
-						'Invoke-D365DBSync',
-						'Invoke-D365DBSyncPartial',
+						'Invoke-D365DbSync',
+						'Invoke-D365DbSyncPartial',
 						'Invoke-D365DbSyncModule',
+
 						'Invoke-D365InstallLicense',
 						'Invoke-D365InstallAzCopy',
 						'Invoke-D365InstallSqlPackage',
 						
 						'Invoke-D365LcsApiRefreshToken',
+						'Invoke-D365LcsDatabaseExport',
 						'Invoke-D365LcsDatabaseRefresh',
 						'Invoke-D365LcsDeployment',
 						'Invoke-D365LcsUpload',
@@ -197,6 +207,7 @@
 						'Invoke-D365SysRunnerClass',
 						'Invoke-D365SqlScript',
 
+						'Invoke-D365VisualStudioCompilerResultAnalyzer',
 						'Invoke-D365WinRmCertificateRotation',
 						
 						'Invoke-D365TableBrowser',
@@ -278,9 +289,7 @@
 
     # Aliases to export from this module
     AliasesToExport   = @(
-						'Get-D365Package'
-						, 'Get-D365Model'
-						, 'Initialize-D365TestAutomationCertificate'
+						'Initialize-D365TestAutomationCertificate'
 						, 'Add-D365WIFConfigAuthorityThumbprint'
 						, 'Invoke-D365SqlCmd'
 

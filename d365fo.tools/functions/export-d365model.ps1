@@ -12,6 +12,9 @@
     .PARAMETER Model
         Name of the model that you want to work against
         
+    .PARAMETER Force
+        Instruct the cmdlet to overwrite already existing file
+        
     .PARAMETER BinDir
         The path to the bin directory for the environment
         
@@ -56,8 +59,10 @@ function Export-D365Model {
         [string] $Path,
 
         [Parameter(Mandatory = $true, ValueFromPipelineByPropertyName = $true)]
-        [Alias('Module')]
+        [Alias('Modelname')]
         [string] $Model,
+
+        [switch] $Force,
 
         [string] $BinDir = "$Script:PackageDirectory\bin",
 
@@ -77,7 +82,21 @@ function Export-D365Model {
     }
 
     process {
+
+        if($Force){
+            Get-ChildItem -Path "$Path\$Model-*.axmodel" | Select-Object -First 1 | Remove-Item -Force -ErrorAction SilentlyContinue
+        }
+
         Invoke-ModelUtil -Command "Export" -Path $Path -BinDir $BinDir -MetaDataDir $MetaDataDir -Model $Model -ShowOriginalProgress:$ShowOriginalProgress -OutputCommandOnly:$OutputCommandOnly
+
+        if (Test-PSFFunctionInterrupt) { return }
+
+        $file = Get-ChildItem -Path "$Path\$Model-*.axmodel" | Select-Object -First 1
+        
+        [PSCustomObject]@{
+            File     = $file.FullName
+            Filename = (Split-Path $file.FullName -Leaf)
+        }
     }
     
     end {
