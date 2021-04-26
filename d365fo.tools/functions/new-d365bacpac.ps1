@@ -66,6 +66,13 @@
         This is less user friendly, but allows catching exceptions in calling scripts
         
     .EXAMPLE
+        PS C:\> Invoke-D365InstallSqlPackage
+        
+        You should always install the latest version of the SqlPackage.exe, which is used by New-D365Bacpac.
+        
+        This will fetch the latest .Net Core Version of SqlPackage.exe and install it at "C:\temp\d365fo.tools\SqlPackage".
+        
+    .EXAMPLE
         PS C:\> New-D365Bacpac -ExportModeTier1 -BackupDirectory c:\Temp\backup\ -NewDatabaseName Testing1 -BacpacFile "C:\Temp\Bacpac\Testing1.bacpac"
         
         Will backup the "AXDB" database and restore is as "Testing1" again the localhost SQL Server.
@@ -169,7 +176,7 @@ function New-D365Bacpac {
 
         [switch] $ExportOnly,
 
-        [string] $MaxParallelism = 8,
+        [int] $MaxParallelism = 8,
 
         [switch] $ShowOriginalProgress,
 
@@ -223,6 +230,7 @@ function New-D365Bacpac {
         Action     = "export"
         FilePath   = $BacpacFile
         Properties = $Properties.ToArray()
+        MaxParallelism = $MaxParallelism
     }
 
     if (-not [system.string]::IsNullOrEmpty($DiagnosticFile)) {

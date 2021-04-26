@@ -34,6 +34,12 @@
         Valid options:
         "https://lcsapi.lcs.dynamics.com"
         "https://lcsapi.eu.lcs.dynamics.com"
+        "https://lcsapi.fr.lcs.dynamics.com"
+        "https://lcsapi.sa.lcs.dynamics.com"
+        "https://lcsapi.uae.lcs.dynamics.com"
+        "https://lcsapi.ch.lcs.dynamics.com"
+        "https://lcsapi.lcs.dynamics.cn"
+        "https://lcsapi.gov.lcs.microsoftdynamics.us"
         
         Default value can be configured using Set-D365LcsApiConfig
         
@@ -45,6 +51,10 @@
         Default output from this cmdlet is 2 (two) different objects. The first object is the response object for starting the export operation. The second object is the response object from fetching the status of the export operation.
         
         Setting this parameter (activate it), will affect the number of output objects. If you skip, only the first response object outputted.
+        
+    .PARAMETER EnableException
+        This parameters disables user-friendly warnings and enables the throwing of exceptions
+        This is less user friendly, but allows catching exceptions in calling scripts
         
     .EXAMPLE
         PS C:\> Invoke-D365LcsDatabaseExport -ProjectId 123456789 -SourceEnvironmentId "958ae597-f089-4811-abbd-c1190917eaae" -BackupName "BackupViaApi" -BearerToken "JldjfafLJdfjlfsalfd..." -LcsApiUri "https://lcsapi.lcs.dynamics.com"
@@ -140,10 +150,8 @@ function Invoke-D365LcsDatabaseExport {
     [CmdletBinding()]
     [OutputType()]
     param(
-        [Parameter(Mandatory = $false)]
         [int] $ProjectId = $Script:LcsApiProjectId,
         
-        [Parameter(Mandatory = $false)]
         [Alias('Token')]
         [string] $BearerToken = $Script:LcsApiBearerToken,
 
@@ -153,10 +161,11 @@ function Invoke-D365LcsDatabaseExport {
         [Parameter(Mandatory = $true)]
         [string] $BackupName,
 
-        [Parameter(Mandatory = $false)]
         [string] $LcsApiUri = $Script:LcsApiLcsApiUri,
 
-        [switch] $SkipInitialStatusFetch
+        [switch] $SkipInitialStatusFetch,
+
+        [switch] $EnableException
     )
 
     Invoke-TimeSignal -Start

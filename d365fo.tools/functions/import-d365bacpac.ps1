@@ -84,6 +84,11 @@
         
         The default value is 8
         
+    .PARAMETER LogPath
+        The path where the log file(s) will be saved
+        
+        When running without the ShowOriginalProgress parameter, the log files will be the standard output and the error output from the underlying tool executed
+        
     .PARAMETER ShowOriginalProgress
         Instruct the cmdlet to show the standard output in the console
         
@@ -97,6 +102,13 @@
     .PARAMETER EnableException
         This parameters disables user-friendly warnings and enables the throwing of exceptions
         This is less user friendly, but allows catching exceptions in calling scripts
+        
+    .EXAMPLE
+        PS C:\> Invoke-D365InstallSqlPackage
+        
+        You should always install the latest version of the SqlPackage.exe, which is used by New-D365Bacpac.
+        
+        This will fetch the latest .Net Core Version of SqlPackage.exe and install it at "C:\temp\d365fo.tools\SqlPackage".
         
     .EXAMPLE
         PS C:\> Import-D365Bacpac -ImportModeTier1 -BacpacFile "C:\temp\uat.bacpac" -NewDatabaseName "ImportedDatabase"
@@ -224,7 +236,10 @@ function Import-D365Bacpac {
         [Parameter(Mandatory = $true, ParameterSetName = 'ImportOnlyTier2')]
         [switch] $ImportOnly,
         
-        [string] $MaxParallelism = 8,
+        [int] $MaxParallelism = 8,
+
+        [Alias('LogDir')]
+        [string] $LogPath = $(Join-Path -Path $Script:DefaultTempPath -ChildPath "Logs\ImportBacpac"),
 
         [switch] $ShowOriginalProgress,
 
@@ -260,6 +275,7 @@ function Import-D365Bacpac {
     $ImportParams = @{
         Action   = "import"
         FilePath = $BacpacFile
+        MaxParallelism = $MaxParallelism
     }
 
     if (-not [system.string]::IsNullOrEmpty($DiagnosticFile)) {
@@ -292,7 +308,7 @@ function Import-D365Bacpac {
     $Params.DatabaseName = $NewDatabaseName
     
     Write-PSFMessage -Level Verbose "Start importing the bacpac with a new database name and current settings"
-    Invoke-SqlPackage @Params @ImportParams -TrustedConnection $UseTrustedConnection -ShowOriginalProgress:$ShowOriginalProgress -OutputCommandOnly:$OutputCommandOnly
+    Invoke-SqlPackage @Params @ImportParams -TrustedConnection $UseTrustedConnection -ShowOriginalProgress:$ShowOriginalProgress -OutputCommandOnly:$OutputCommandOnly -LogPath $LogPath
 
     if ($OutputCommandOnly) { return }
 

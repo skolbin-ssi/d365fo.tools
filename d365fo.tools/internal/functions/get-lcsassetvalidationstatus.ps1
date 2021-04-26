@@ -23,6 +23,16 @@
         Valid options:
         "https://lcsapi.lcs.dynamics.com"
         "https://lcsapi.eu.lcs.dynamics.com"
+        "https://lcsapi.fr.lcs.dynamics.com"
+        "https://lcsapi.sa.lcs.dynamics.com"
+        "https://lcsapi.uae.lcs.dynamics.com"
+        "https://lcsapi.ch.lcs.dynamics.com"
+        "https://lcsapi.lcs.dynamics.cn"
+        "https://lcsapi.gov.lcs.microsoftdynamics.us"
+        
+    .PARAMETER EnableException
+        This parameters disables user-friendly warnings and enables the throwing of exceptions
+        This is less user friendly, but allows catching exceptions in calling scripts
         
     .EXAMPLE
         PS C:\> Get-LcsAssetValidationStatus -ProjectId 123456789 -BearerToken "JldjfafLJdfjlfsalfd..." -AssetId "958ae597-f089-4811-abbd-c1190917eaae" -LcsApiUri "https://lcsapi.lcs.dynamics.com"
@@ -52,14 +62,17 @@ function Get-LcsAssetValidationStatus {
         [string] $AssetId,
 
         [Parameter(Mandatory = $true, Position = 4)]
-        [string] $LcsApiUri
+        [string] $LcsApiUri,
+
+        [switch] $EnableException
     )
 
     Invoke-TimeSignal -Start
     
     $client = New-Object -TypeName System.Net.Http.HttpClient
     $client.DefaultRequestHeaders.Clear()
-
+    $client.DefaultRequestHeaders.UserAgent.ParseAdd("d365fo.tools via PowerShell")
+    
     $checkUri = "$LcsApiUri/box/fileasset/GetFileAssetValidationStatus/$($ProjectId)?assetId=$AssetId"
 
     $request = New-JsonRequest -Uri $checkUri -Token $BearerToken -HttpMethod "GET"
@@ -84,7 +97,7 @@ function Get-LcsAssetValidationStatus {
         
         if (-not ($result.StatusCode -eq [System.Net.HttpStatusCode]::OK)) {
             if (($asset) -and ($asset.Message)) {
-                Write-PSFMessage -Level Host -Message "Error creating new file asset." -Target $($asset.Message)
+                Write-PSFMessage -Level Host -Message "Error getting the validation status of the file asset." -Target $($asset.Message)
                 Stop-PSFFunction -Message "Stopping because of errors"
             }
             else {
@@ -95,11 +108,11 @@ function Get-LcsAssetValidationStatus {
 
         if (-not ($asset.Id)) {
             if ($asset.Message) {
-                Write-PSFMessage -Level Host -Message "Error creating new file asset." -Target $($asset.Message)
+                Write-PSFMessage -Level Host -Message "Error getting the validation status of the file asset." -Target $($asset.Message)
                 Stop-PSFFunction -Message "Stopping because of errors"
             }
             else {
-                Write-PSFMessage -Level Host -Message "Unknown error creating new file asset." -Target $asset
+                Write-PSFMessage -Level Host -Message "Unknown error getting the validation status of the file asset." -Target $asset
                 Stop-PSFFunction -Message "Stopping because of errors"
             }
         }

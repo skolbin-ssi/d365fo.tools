@@ -14,7 +14,7 @@ Upload a file to a LCS project
 
 ```
 Get-D365LcsApiToken [[-ClientId] <String>] [-Username] <String> [-Password] <String> [[-LcsApiUri] <String>]
- [<CommonParameters>]
+ [-EnableException] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -133,6 +133,12 @@ Depending on whether your LCS project is located in europe or not, there is 2 va
 Valid options:
 "https://lcsapi.lcs.dynamics.com"
 "https://lcsapi.eu.lcs.dynamics.com"
+"https://lcsapi.fr.lcs.dynamics.com"
+"https://lcsapi.sa.lcs.dynamics.com"
+"https://lcsapi.uae.lcs.dynamics.com"
+"https://lcsapi.ch.lcs.dynamics.com"
+"https://lcsapi.lcs.dynamics.cn"
+"https://lcsapi.gov.lcs.microsoftdynamics.us"
 
 Default value can be configured using Set-D365LcsApiConfig
 
@@ -144,6 +150,22 @@ Aliases:
 Required: False
 Position: 4
 Default value: $Script:LcsApiApiUri
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -EnableException
+This parameters disables user-friendly warnings and enables the throwing of exceptions
+This is less user friendly, but allows catching exceptions in calling scripts
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: (All)
+Aliases:
+
+Required: False
+Position: Named
+Default value: False
 Accept pipeline input: False
 Accept wildcard characters: False
 ```

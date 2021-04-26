@@ -3,7 +3,7 @@
     RootModule   = 'd365fo.tools.psm1'
 
     # Version number of this module.
-    ModuleVersion     = '0.6.16'
+	ModuleVersion     = '0.6.56'
 
     # ID used to uniquely identify this module
     GUID              = '7c7b26d4-f764-4cb0-a692-459a0a689dbb'
@@ -30,7 +30,7 @@
 		, @{ ModuleName = 'Azure.Storage'; ModuleVersion = '4.4.0' }
 		, @{ ModuleName = 'AzureAd'; ModuleVersion = '2.0.1.16' }
 		, @{ ModuleName = 'PSNotification'; ModuleVersion = '0.5.3' }
-		, @{ ModuleName = 'PSOAuthHelper'; ModuleVersion = '0.2.3' }
+		, @{ ModuleName = 'PSOAuthHelper'; ModuleVersion = '0.3.0' }
 		, @{ ModuleName = 'ImportExcel'; ModuleVersion = '7.1.0' }
 	)
 	
@@ -57,9 +57,10 @@
 						'Backup-D365Runbook',
 
 						'Clear-D365ActiveBroadcastMessageConfig',
+						'Clear-D365BacpacTableData',
 						'Clear-D365MonitorData',
-						'Clear-D365TableDataFromBacpac',
 						'Clear-D365TempDbTables',
+						'ConvertTo-D365Dacpac',
 
 						'Publish-D365SsrsReport',
 
@@ -74,8 +75,8 @@
 						'Enable-D365User',
 						'Enable-D365Flight',
 
+						'Export-D365BacpacModelFile',
 						'Export-D365Model',
-						'Export-D365ModelFileFromBacpac',
 						'Export-D365SecurityDetails',
 
 						'Find-D365Command',
@@ -86,8 +87,13 @@
 
 						'Get-D365AOTObject',
 
+						'Get-D365AzureDevOpsNuget',
+
 						'Get-D365AzureStorageConfig',
 						'Get-D365AzureStorageFile',
+						'Get-D365AzureStorageUrl',
+						'Get-D365BacpacSqlOptions',
+						'Get-D365BacpacTable',
 						'Get-D365BroadcastMessage',
 						'Get-D365BroadcastMessageConfig',
 
@@ -105,7 +111,7 @@
 						'Get-D365EnvironmentConfig',
 						'Get-D365EnvironmentSettings',
 						'Get-D365EventTraceProvider',
-						'Get-D365ExposedService',
+						'Get-D365JsonService',
 
 						'Get-D365InstalledHotfix',
 						'Get-D365InstalledPackageOld',
@@ -119,6 +125,7 @@
 						
 						'Get-D365LcsApiConfig',
 						'Get-D365LcsApiToken',
+						'Get-D365LcsAssetFile',
 						'Get-D365LcsAssetValidationStatus',
 						'Get-D365LcsDatabaseBackups',
 						'Get-D365LcsDatabaseOperationStatus',
@@ -141,9 +148,9 @@
 
 						'Get-D365Runbook',
 						'Get-D365RunbookId',
+						'Get-D365RunbookLogFile',
 
 						'Get-D365SDPCleanUp',
-						'Get-D365SqlOptionsFromBacpacModelFile',
 
 						'Get-D365Table',
 						'Get-D365TableField',
@@ -161,13 +168,18 @@
 						'Get-D365WindowsActivationStatus',
 
 						'Import-D365AadUser',
+						'Import-D365AadApplication',
 						'Import-D365Bacpac',
+						'Import-D365Dacpac',
 						'Import-D365Model',
 						'Import-D365ExternalUser',
+						'Import-D365RsatSelfServiceCertificates',
 						
 						'Initialize-D365RsatCertificate',
 
 						'Invoke-D365AzCopyTransfer',
+						
+						'Invoke-D365AzureDevOpsNugetPush',
 						
 						'Invoke-D365AzureStorageDownload',
 						'Invoke-D365AzureStorageUpload',
@@ -178,15 +190,32 @@
 						'Invoke-D365DbSync',
 						'Invoke-D365DbSyncPartial',
 						'Invoke-D365DbSyncModule',
-
-						'Invoke-D365InstallLicense',
+						
+						'Invoke-D365GenerateReportAggregateDataEntity',
+						'Invoke-D365GenerateReportAggregateMeasure',
+						'Invoke-D365GenerateReportConfigKey',
+						'Invoke-D365GenerateReportConfigKeyGroup',
+						'Invoke-D365GenerateReportDataEntity',
+						'Invoke-D365GenerateReportDataEntityField',
+						'Invoke-D365GenerateReportKpi',
+						'Invoke-D365GenerateReportLicenseCode',
+						'Invoke-D365GenerateReportMenuItem',
+						'Invoke-D365GenerateReports',
+						'Invoke-D365GenerateReportSsrs',
+						'Invoke-D365GenerateReportTable',
+						'Invoke-D365GenerateReportWorkflowType'
+						
 						'Invoke-D365InstallAzCopy',
+						'Invoke-D365InstallLicense',
+						'Invoke-D365InstallNuget',
 						'Invoke-D365InstallSqlPackage',
 						
 						'Invoke-D365LcsApiRefreshToken',
 						'Invoke-D365LcsDatabaseExport',
 						'Invoke-D365LcsDatabaseRefresh',
 						'Invoke-D365LcsDeployment',
+						'Invoke-D365LcsEnvironmentStart',
+						'Invoke-D365LcsEnvironmentStop',
 						'Invoke-D365LcsUpload',
 						'Invoke-D365LogicApp',
 						'Invoke-D365LogicAppMessage',
@@ -249,6 +278,9 @@
 						'Set-D365FavoriteBookmark',
 						'Set-D365LcsApiConfig',
 						'Set-D365LogicAppConfig',
+						
+						'Set-D365NugetPath',
+
 						'Set-D365OfflineAuthenticationAdminEmail',
 						
 						'Set-D365RsatTier2Crypto',
@@ -279,6 +311,7 @@
 						'Test-D365FlightServiceCatalogId',
 						'Test-D365LabelIdIsValid',
 						
+						'Update-D365BacpacModelFileSingleTable',
 						'Update-D365User'
 						)
 
@@ -293,7 +326,9 @@
 						'Initialize-D365TestAutomationCertificate'
 						, 'Add-D365WIFConfigAuthorityThumbprint'
 						, 'Invoke-D365SqlCmd'
-
+						, 'Get-D365ModelFileFromBacpac'
+						, 'Get-D365SqlOptionsFromBacpacModelFile'
+						, 'Clear-D365TableDataFromBacpac'
 						)
 
     # List of all modules packaged with this module

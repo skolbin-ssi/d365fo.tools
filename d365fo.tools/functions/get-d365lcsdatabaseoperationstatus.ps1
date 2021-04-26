@@ -34,6 +34,12 @@
         Valid options:
         "https://lcsapi.lcs.dynamics.com"
         "https://lcsapi.eu.lcs.dynamics.com"
+        "https://lcsapi.fr.lcs.dynamics.com"
+        "https://lcsapi.sa.lcs.dynamics.com"
+        "https://lcsapi.uae.lcs.dynamics.com"
+        "https://lcsapi.ch.lcs.dynamics.com"
+        "https://lcsapi.lcs.dynamics.cn"
+        "https://lcsapi.gov.lcs.microsoftdynamics.us"
         
         Default value can be configured using Set-D365LcsApiConfig
         
@@ -46,6 +52,10 @@
         Time in secounds that you want the cmdlet to use as the sleep timer between each request against the LCS endpoint
         
         Default value is 300
+        
+    .PARAMETER EnableException
+        This parameters disables user-friendly warnings and enables the throwing of exceptions
+        This is less user friendly, but allows catching exceptions in calling scripts
         
     .EXAMPLE
         PS C:\> Get-D365LcsDatabaseOperationStatus -ProjectId 123456789 -OperationActivityId 123456789 -EnvironmentId "13cc7700-c13b-4ea3-81cd-2d26fa72ec5e" -BearerToken "JldjfafLJdfjlfsalfd..." -LcsApiUri "https://lcsapi.lcs.dynamics.com"
@@ -130,7 +140,9 @@ function Get-D365LcsDatabaseOperationStatus {
 
         [switch] $WaitForCompletion,
 
-        [int] $SleepInSeconds = 300
+        [int] $SleepInSeconds = 300,
+
+        [switch] $EnableException
     )
 
     process {

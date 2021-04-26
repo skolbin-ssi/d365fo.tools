@@ -23,6 +23,16 @@
         Valid options:
         "https://lcsapi.lcs.dynamics.com"
         "https://lcsapi.eu.lcs.dynamics.com"
+        "https://lcsapi.fr.lcs.dynamics.com"
+        "https://lcsapi.sa.lcs.dynamics.com"
+        "https://lcsapi.uae.lcs.dynamics.com"
+        "https://lcsapi.ch.lcs.dynamics.com"
+        "https://lcsapi.lcs.dynamics.cn"
+        "https://lcsapi.gov.lcs.microsoftdynamics.us"
+        
+    .PARAMETER EnableException
+        This parameters disables user-friendly warnings and enables the throwing of exceptions
+        This is less user friendly, but allows catching exceptions in calling scripts
         
     .EXAMPLE
         PS C:\> Complete-LcsUpload -Token "Bearer JldjfafLJdfjlfsalfd..." -ProjectId 123456789 -AssetId "958ae597-f089-4811-abbd-c1190917eaae" -LcsApiUri "https://lcsapi.lcs.dynamics.com"
@@ -52,14 +62,17 @@ function Complete-LcsUpload {
         [string]$AssetId,
 
         [Parameter(Mandatory = $false)]
-        [string]$LcsApiUri
+        [string]$LcsApiUri,
+
+        [switch] $EnableException
     )
     
     Invoke-TimeSignal -Start
 
     $client = New-Object -TypeName System.Net.Http.HttpClient
     $client.DefaultRequestHeaders.Clear()
-
+    $client.DefaultRequestHeaders.UserAgent.ParseAdd("d365fo.tools via PowerShell")
+    
     $commitFileUri = "$LcsApiUri/box/fileasset/CommitFileAsset/$($ProjectId)?assetId=$AssetId"
 
     $request = New-JsonRequest -Uri $commitFileUri -Token $Token

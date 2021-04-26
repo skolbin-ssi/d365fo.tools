@@ -1,0 +1,161 @@
+﻿---
+external help file: d365fo.tools-help.xml
+Module Name: d365fo.tools
+online version:
+schema: 2.0.0
+---
+
+# Invoke-D365LcsEnvironmentStart
+
+## SYNOPSIS
+Start a specified environment through LCS.
+
+## SYNTAX
+
+```
+Invoke-D365LcsEnvironmentStart [[-ProjectId] <Int32>] [[-BearerToken] <String>] [-EnvironmentId] <String>
+ [[-LcsApiUri] <String>] [-EnableException] [<CommonParameters>]
+```
+
+## DESCRIPTION
+Start a specified IAAS environment that is Customer Managed through the LCS API.
+
+## EXAMPLES
+
+### EXAMPLE 1
+```
+Invoke-D365LcsEnvironmentStart -ProjectId 123456789 -EnvironmentId "958ae597-f089-4811-abbd-c1190917eaae" -BearerToken "JldjfafLJdfjlfsalfd..." -LcsApiUri "https://lcsapi.lcs.dynamics.com"
+```
+
+This will trigger the environment start operation upon the given environment through the LCS API.
+The LCS project is identified by the ProjectId 123456789, which can be obtained in the LCS portal.
+The environment is identified by the EnvironmentId "958ae597-f089-4811-abbd-c1190917eaae", which can be obtained in the LCS portal.
+The request will authenticate with the BearerToken "JldjfafLJdfjlfsalfd...".
+The http request will be going to the LcsApiUri "https://lcsapi.lcs.dynamics.com"
+
+## PARAMETERS
+
+### -ProjectId
+The project id for the Dynamics 365 for Finance & Operations project inside LCS
+
+Default value can be configured using Set-D365LcsApiConfig
+
+```yaml
+Type: Int32
+Parameter Sets: (All)
+Aliases:
+
+Required: False
+Position: 1
+Default value: $Script:LcsApiProjectId
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -BearerToken
+The token you want to use when working against the LCS api
+
+Default value can be configured using Set-D365LcsApiConfig
+
+```yaml
+Type: String
+Parameter Sets: (All)
+Aliases: Token
+
+Required: False
+Position: 2
+Default value: $Script:LcsApiBearerToken
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -EnvironmentId
+The unique id of the environment that you want to take action upon
+
+The Id can be located inside the LCS portal
+
+```yaml
+Type: String
+Parameter Sets: (All)
+Aliases:
+
+Required: True
+Position: 3
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -LcsApiUri
+URI / URL to the LCS API you want to use
+
+Depending where your LCS project is located, there are several valid URI's / URL's
+
+Valid options:
+"https://lcsapi.lcs.dynamics.com"
+"https://lcsapi.eu.lcs.dynamics.com"
+"https://lcsapi.fr.lcs.dynamics.com"
+"https://lcsapi.sa.lcs.dynamics.com"
+"https://lcsapi.uae.lcs.dynamics.com"
+"https://lcsapi.ch.lcs.dynamics.com"
+"https://lcsapi.lcs.dynamics.cn"
+"https://lcsapi.gov.lcs.microsoftdynamics.us"
+
+Default value can be configured using Set-D365LcsApiConfig
+
+```yaml
+Type: String
+Parameter Sets: (All)
+Aliases:
+
+Required: False
+Position: 4
+Default value: $Script:LcsApiLcsApiUri
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -EnableException
+This parameters disables user-friendly warnings and enables the throwing of exceptions
+This is less user friendly, but allows catching exceptions in calling scripts
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: (All)
+Aliases:
+
+Required: False
+Position: Named
+Default value: False
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### CommonParameters
+This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable, -InformationAction, -InformationVariable, -OutVariable, -OutBuffer, -PipelineVariable, -Verbose, -WarningAction, and -WarningVariable. For more information, see [about_CommonParameters](http://go.microsoft.com/fwlink/?LinkID=113216).
+
+## INPUTS
+
+## OUTPUTS
+
+## NOTES
+Only Customer Managed IAAS environments are supported with this API.
+Microsoft Managed IAAS environments need to remain online to allow for Microsoft update operations and are not supported with this API.
+Self-service environments do not have a stop functionality and will not work with this API.
+
+Tags: Environment, Start, StartStop, Stop, LCS, Api
+
+Author: Mötz Jensen (@Splaxi), Billy Richardson (@richardsondev)
+
+## RELATED LINKS
+
+[Get-D365LcsApiConfig]()
+
+[Get-D365LcsApiToken]()
+
+[Invoke-D365LcsApiRefreshToken]()
+
+[Set-D365LcsApiConfig]()
+
+[Invoke-D365LcsEnvironmentStop]()
+

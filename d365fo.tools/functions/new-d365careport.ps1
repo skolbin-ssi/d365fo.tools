@@ -30,6 +30,14 @@
     .PARAMETER XmlLog
         Path where you want to store the Xml log output generated from the best practice analyser
         
+    .PARAMETER PackagesRoot
+        Instructs the cmdlet to use binary metadata
+        
+    .PARAMETER LogPath
+        The path where the log file(s) will be saved
+        
+        When running without the ShowOriginalProgress parameter, the log files will be the standard output and the error output from the underlying tool executed
+        
     .PARAMETER ShowOriginalProgress
         Instruct the cmdlet to show the standard output in the console
         
@@ -62,6 +70,13 @@
         It will use the default value for the OutputPath parameter, which is "c:\temp\d365fo.tools\CAReport.xlsx".
         It will append the module name to the desired output file, which will then be "c:\temp\d365fo.tools\CAReport-ApplicationSuite.xlsx".
         
+    .EXAMPLE
+        PS C:\> New-D365CAReport -OutputPath "c:\temp\CAReport.xlsx" -module "ApplicationSuite" -model "MyOverLayerModel" -PackagesRoot
+        
+        This will generate a CAR report against MyOverLayerModel in the ApplicationSuite Module.
+        It will use the binary metadata to look for the module and model.
+        It will use the "c:\temp\CAReport.xlsx" value for the OutputPath parameter.
+        
     .NOTES
         Author: Tommy Skaue (@Skaue)
         
@@ -92,6 +107,11 @@ function New-D365CAReport {
 
         [string] $XmlLog = (Join-Path $Script:DefaultTempPath "BPCheckLogcd.xml"),
 
+        [switch] $PackagesRoot,
+
+        [Alias('LogDir')]
+        [string] $LogPath = $(Join-Path -Path $Script:DefaultTempPath -ChildPath "Logs\CAReport"),
+
         [switch] $ShowOriginalProgress,
 
         [switch] $OutputCommandOnly
@@ -115,9 +135,13 @@ function New-D365CAReport {
         "-car=`"$OutputPath`""
     )
 
+    if ($PackagesRoot -eq $true) {
+        $params += "-packagesroot=`"$MetaDataDir`""
+    }
+
     Write-PSFMessage -Level Verbose -Message "Starting the $executable with the parameter options." -Target $param
 
-    Invoke-Process -Executable $executable -Params $params -ShowOriginalProgress:$ShowOriginalProgress -OutputCommandOnly:$OutputCommandOnly
+    Invoke-Process -Executable $executable -Params $params -ShowOriginalProgress:$ShowOriginalProgress -OutputCommandOnly:$OutputCommandOnly -LogPath $LogPath
 
     if (Test-PSFFunctionInterrupt) { return }
 

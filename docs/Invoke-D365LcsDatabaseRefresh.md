@@ -14,7 +14,8 @@ Start a database refresh between 2 environments
 
 ```
 Invoke-D365LcsDatabaseRefresh [[-ProjectId] <Int32>] [[-BearerToken] <String>] [-SourceEnvironmentId] <String>
- [-TargetEnvironmentId] <String> [[-LcsApiUri] <String>] [-SkipInitialStatusFetch] [<CommonParameters>]
+ [-TargetEnvironmentId] <String> [[-LcsApiUri] <String>] [-SkipInitialStatusFetch] [-EnableException]
+ [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -67,9 +68,6 @@ Will pipe the $databaseRefresh variable to the Get-D365LcsDatabaseOperationStatu
 All default values will come from the configuration available from Get-D365LcsApiConfig.
 
 The default values can be configured using Set-D365LcsApiConfig.
-
-
-$databaseRefresh = Invoke-D365LcsDatabaseRefresh -SourceEnvironmentId be9aa4a4-7621-4b7e-b6f5-d518bf0012de -TargetEnvironmentId 43bcc00a-d94c-47cd-a20f-3c7aee98b5a9
 
 ### EXAMPLE 4
 ```
@@ -163,6 +161,12 @@ Depending on whether your LCS project is located in europe or not, there is 2 va
 Valid options:
 "https://lcsapi.lcs.dynamics.com"
 "https://lcsapi.eu.lcs.dynamics.com"
+"https://lcsapi.fr.lcs.dynamics.com"
+"https://lcsapi.sa.lcs.dynamics.com"
+"https://lcsapi.uae.lcs.dynamics.com"
+"https://lcsapi.ch.lcs.dynamics.com"
+"https://lcsapi.lcs.dynamics.cn"
+"https://lcsapi.gov.lcs.microsoftdynamics.us"
 
 Default value can be configured using Set-D365LcsApiConfig
 
@@ -189,6 +193,22 @@ The second object is the response object from fetching the status of the refresh
 
 Setting this parameter (activate it), will affect the number of output objects.
 If you skip, only the first response object outputted.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: (All)
+Aliases:
+
+Required: False
+Position: Named
+Default value: False
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -EnableException
+This parameters disables user-friendly warnings and enables the throwing of exceptions
+This is less user friendly, but allows catching exceptions in calling scripts
 
 ```yaml
 Type: SwitchParameter

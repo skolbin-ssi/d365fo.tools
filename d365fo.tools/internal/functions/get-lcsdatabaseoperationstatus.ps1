@@ -31,6 +31,16 @@
         Valid options:
         "https://lcsapi.lcs.dynamics.com"
         "https://lcsapi.eu.lcs.dynamics.com"
+        "https://lcsapi.fr.lcs.dynamics.com"
+        "https://lcsapi.sa.lcs.dynamics.com"
+        "https://lcsapi.uae.lcs.dynamics.com"
+        "https://lcsapi.ch.lcs.dynamics.com"
+        "https://lcsapi.lcs.dynamics.cn"
+        "https://lcsapi.gov.lcs.microsoftdynamics.us"
+        
+    .PARAMETER EnableException
+        This parameters disables user-friendly warnings and enables the throwing of exceptions
+        This is less user friendly, but allows catching exceptions in calling scripts
         
     .EXAMPLE
         PS C:\> Get-LcsDatabaseOperationStatus -ProjectId 123456789 -OperationActivityId 123456789 -EnvironmentId "13cc7700-c13b-4ea3-81cd-2d26fa72ec5e" -Token "JldjfafLJdfjlfsalfd..." -LcsApiUri "https://lcsapi.lcs.dynamics.com"
@@ -68,7 +78,9 @@ function Get-LcsDatabaseOperationStatus {
         [string] $EnvironmentId,
         
         [Parameter(Mandatory = $true)]
-        [string] $LcsApiUri
+        [string] $LcsApiUri,
+
+        [switch] $EnableException
     )
 
     Invoke-TimeSignal -Start
@@ -77,7 +89,8 @@ function Get-LcsDatabaseOperationStatus {
     
     $client = New-Object -TypeName System.Net.Http.HttpClient
     $client.DefaultRequestHeaders.Clear()
-
+    $client.DefaultRequestHeaders.UserAgent.ParseAdd("d365fo.tools via PowerShell")
+    
     $databaseOperationStatusUri = "$LcsApiUri/databasemovement/v1/fetchstatus/project/$($ProjectId)/environment/$($EnvironmentId)/operationactivity/$($OperationActivityId)"
     
     $request = New-JsonRequest -Uri $databaseOperationStatusUri -Token $BearerToken -HttpMethod "GET"
@@ -109,32 +122,33 @@ function Get-LcsDatabaseOperationStatus {
                 }
             }
             elseif ($operationStatus.OperationActivityId) {
-                $errorText = "API Call returned $($result.StatusCode): $($result.ReasonPhrase) (Activity Id: '$($operationStatus.OperationActivityId)')"
+                $errorText = "API Call returned $($result.StatusCode): $($result.ReasonPhrase) (Activity Id: '$($operationStatus.OperationActivityId)') (Raw Response: '$responseString')"
             }
             else {
-                $errorText = "API Call returned $($result.StatusCode): $($result.ReasonPhrase)"
+                $errorText = "API Call returned $($result.StatusCode): $($result.ReasonPhrase) (Raw Response: '$responseString')"
             }
 
             Write-PSFMessage -Level Host -Message "Error getting database refresh status." -Target $($operationStatus.ErrorMessage)
             Write-PSFMessage -Level Host -Message $errorText -Target $($result.ReasonPhrase)
             Stop-PSFFunction -Message "Stopping because of errors" -StepsUpward 1
+            return
         }
-
         
         if (-not ($operationStatus.IsSuccess)) {
             if ($operationStatus.ErrorMessage) {
                 $errorText = "Error in request for database refresh status of environment: '$( $operationStatus.ErrorMessage)' (Activity Id: '$( $operationStatus.OperationActivityId)')"
             }
             elseif ( $operationStatus.OperationActivityId) {
-                $errorText = "Error in request for database refresh status of environment. Activity Id: '$($activity.OperationActivityId)'"
+                $errorText = "Error in request for database refresh status of environment. Activity Id: '$($activity.OperationActivityId)' (Raw Response: '$responseString')"
             }
             else {
-                $errorText = "Unknown error in request for database refresh status."
+                $errorText = "Unknown error in request for database refresh status. (Raw Response: '$responseString')"
             }
 
             Write-PSFMessage -Level Host -Message "Unknown error requesting database refresh status." -Target $operationStatus
             Write-PSFMessage -Level Host -Message $errorText -Target $($result.ReasonPhrase)
             Stop-PSFFunction -Message "Stopping because of errors" -StepsUpward 1
+            return
         }
     }
     catch {

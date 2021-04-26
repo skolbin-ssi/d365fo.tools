@@ -14,7 +14,8 @@ Start a database export from an environment
 
 ```
 Invoke-D365LcsDatabaseExport [[-ProjectId] <Int32>] [[-BearerToken] <String>] [-SourceEnvironmentId] <String>
- [-BackupName] <String> [[-LcsApiUri] <String>] [-SkipInitialStatusFetch] [<CommonParameters>]
+ [-BackupName] <String> [[-LcsApiUri] <String>] [-SkipInitialStatusFetch] [-EnableException]
+ [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -160,6 +161,12 @@ Depending on whether your LCS project is located in europe or not, there is 2 va
 Valid options:
 "https://lcsapi.lcs.dynamics.com"
 "https://lcsapi.eu.lcs.dynamics.com"
+"https://lcsapi.fr.lcs.dynamics.com"
+"https://lcsapi.sa.lcs.dynamics.com"
+"https://lcsapi.uae.lcs.dynamics.com"
+"https://lcsapi.ch.lcs.dynamics.com"
+"https://lcsapi.lcs.dynamics.cn"
+"https://lcsapi.gov.lcs.microsoftdynamics.us"
 
 Default value can be configured using Set-D365LcsApiConfig
 
@@ -186,6 +193,22 @@ The second object is the response object from fetching the status of the export 
 
 Setting this parameter (activate it), will affect the number of output objects.
 If you skip, only the first response object outputted.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: (All)
+Aliases:
+
+Required: False
+Position: Named
+Default value: False
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -EnableException
+This parameters disables user-friendly warnings and enables the throwing of exceptions
+This is less user friendly, but allows catching exceptions in calling scripts
 
 ```yaml
 Type: SwitchParameter

@@ -70,7 +70,7 @@ function Invoke-D365InstallSqlPackage {
 
     if (-not $SkipExtractFromPage) {
         $content = (Invoke-WebRequest -Uri "https://docs.microsoft.com/en-us/sql/tools/sqlpackage-download" -UseBasicParsing).content
-        $res = $content -match '<td.*>Windows .NET Core</td>\s*<td.*><a href="(https://.*)" .*'
+        $res = $content -match '<td.*>Windows .NET Core<.*/td>\s*<td.*><a href="(https://.*)" .*'
         
         if ($res) {
             $Url = ([string]$Matches[1]).Trim()
@@ -103,5 +103,5 @@ function Invoke-D365InstallSqlPackage {
     $tempExtractPath | Remove-Item -Force -Recurse
     $downloadPath | Remove-Item -Force -Recurse
 
-    Set-D365SqlPackagePath $(Join-Path -Path $Path -ChildPath "SqlPackage.exe")
+    Set-D365SqlPackagePath -Path $(Join-Path -Path $Path -ChildPath "SqlPackage.exe")
 }

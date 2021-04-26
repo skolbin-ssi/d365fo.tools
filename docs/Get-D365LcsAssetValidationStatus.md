@@ -14,7 +14,7 @@ Get the validation status from LCS
 
 ```
 Get-D365LcsAssetValidationStatus [[-ProjectId] <Int32>] [[-BearerToken] <String>] [-AssetId] <String>
- [[-LcsApiUri] <String>] [-WaitForValidation] [<CommonParameters>]
+ [[-LcsApiUri] <String>] [-WaitForValidation] [-EnableException] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -131,6 +131,12 @@ Depending on whether your LCS project is located in europe or not, there is 2 va
 Valid options:
 "https://lcsapi.lcs.dynamics.com"
 "https://lcsapi.eu.lcs.dynamics.com"
+"https://lcsapi.fr.lcs.dynamics.com"
+"https://lcsapi.sa.lcs.dynamics.com"
+"https://lcsapi.uae.lcs.dynamics.com"
+"https://lcsapi.ch.lcs.dynamics.com"
+"https://lcsapi.lcs.dynamics.cn"
+"https://lcsapi.gov.lcs.microsoftdynamics.us"
 
 Default value can be configured using Set-D365LcsApiConfig
 
@@ -150,6 +156,22 @@ Accept wildcard characters: False
 Instruct the cmdlet to wait for the validation process to complete
 
 The cmdlet will sleep for 60 seconds, before requesting the status of the validation process from LCS
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: (All)
+Aliases:
+
+Required: False
+Position: Named
+Default value: False
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -EnableException
+This parameters disables user-friendly warnings and enables the throwing of exceptions
+This is less user friendly, but allows catching exceptions in calling scripts
 
 ```yaml
 Type: SwitchParameter

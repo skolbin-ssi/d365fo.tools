@@ -16,7 +16,7 @@
         
         Default value can be configured using Set-D365LcsApiConfig
         
-    .PARAMETER ActionHistoryId
+    .PARAMETER ActivityId
         The unique id of the action that you started from the Invoke-D365LcsDeployment cmdlet
         
     .PARAMETER EnvironmentId
@@ -32,6 +32,12 @@
         Valid options:
         "https://lcsapi.lcs.dynamics.com"
         "https://lcsapi.eu.lcs.dynamics.com"
+        "https://lcsapi.fr.lcs.dynamics.com"
+        "https://lcsapi.sa.lcs.dynamics.com"
+        "https://lcsapi.uae.lcs.dynamics.com"
+        "https://lcsapi.ch.lcs.dynamics.com"
+        "https://lcsapi.lcs.dynamics.cn"
+        "https://lcsapi.gov.lcs.microsoftdynamics.us"
         
         Default value can be configured using Set-D365LcsApiConfig
         
@@ -45,21 +51,25 @@
         
         Default value is 300
         
+    .PARAMETER EnableException
+        This parameters disables user-friendly warnings and enables the throwing of exceptions
+        This is less user friendly, but allows catching exceptions in calling scripts
+        
     .EXAMPLE
-        PS C:\> Get-D365LcsDeploymentStatus -ProjectId 123456789 -ActionHistoryId 123456789 -EnvironmentId "13cc7700-c13b-4ea3-81cd-2d26fa72ec5e" -BearerToken "Bearer JldjfafLJdfjlfsalfd..." -LcsApiUri "https://lcsapi.lcs.dynamics.com"
+        PS C:\> Get-D365LcsDeploymentStatus -ProjectId 123456789 -ActivityId 123456789 -EnvironmentId "13cc7700-c13b-4ea3-81cd-2d26fa72ec5e" -BearerToken "Bearer JldjfafLJdfjlfsalfd..." -LcsApiUri "https://lcsapi.lcs.dynamics.com"
         
         This will check the deployment status of specific activity against an environment.
         The LCS project is identified by the ProjectId 123456789, which can be obtained in the LCS portal.
-        The activity is identified by the ActionHistoryId 123456789, which is obtained from the Invoke-D365LcsDeployment execution.
+        The activity is identified by the ActivityId 123456789, which is obtained from the Invoke-D365LcsDeployment execution.
         The environment is identified by the EnvironmentId "13cc7700-c13b-4ea3-81cd-2d26fa72ec5e", which can be obtained in the LCS portal.
         The request will authenticate with the BearerToken "Bearer JldjfafLJdfjlfsalfd...".
         The http request will be going to the LcsApiUri "https://lcsapi.lcs.dynamics.com" (NON-EUROPE).
         
     .EXAMPLE
-        PS C:\> Get-D365LcsDeploymentStatus -ActionHistoryId 123456789 -EnvironmentId "13cc7700-c13b-4ea3-81cd-2d26fa72ec5e"
+        PS C:\> Get-D365LcsDeploymentStatus -ActivityId 123456789 -EnvironmentId "13cc7700-c13b-4ea3-81cd-2d26fa72ec5e"
         
         This will check the deployment status of specific activity against an environment.
-        The activity is identified by the ActionHistoryId 123456789, which is obtained from the Invoke-D365LcsDeployment execution.
+        The activity is identified by the ActivityId 123456789, which is obtained from the Invoke-D365LcsDeployment execution.
         The environment is identified by the EnvironmentId "13cc7700-c13b-4ea3-81cd-2d26fa72ec5e", which can be obtained in the LCS portal.
         
         All default values will come from the configuration available from Get-D365LcsApiConfig.
@@ -67,10 +77,10 @@
         The default values can be configured using Set-D365LcsApiConfig.
         
     .EXAMPLE
-        PS C:\> Get-D365LcsDeploymentStatus -ActionHistoryId 123456789 -EnvironmentId "13cc7700-c13b-4ea3-81cd-2d26fa72ec5e" -WaitForCompletion
+        PS C:\> Get-D365LcsDeploymentStatus -ActivityId 123456789 -EnvironmentId "13cc7700-c13b-4ea3-81cd-2d26fa72ec5e" -WaitForCompletion
         
         This will check the deployment status of specific activity against an environment.
-        The activity is identified by the ActionHistoryId 123456789, which is obtained from the Invoke-D365LcsDeployment execution.
+        The activity is identified by the ActivityId 123456789, which is obtained from the Invoke-D365LcsDeployment execution.
         The environment is identified by the EnvironmentId "13cc7700-c13b-4ea3-81cd-2d26fa72ec5e", which can be obtained in the LCS portal.
         The cmdlet will every 300 seconds contact the LCS API endpoint and check if the status of the deployment is either success or failure.
         
@@ -118,7 +128,8 @@ function Get-D365LcsDeploymentStatus {
         [string] $BearerToken = $Script:LcsApiBearerToken,
 
         [Parameter(Mandatory = $true, ValueFromPipelineByPropertyName = $true)]
-        [string] $ActionHistoryId,
+        [Alias('ActionHistoryId')]
+        [string] $ActivityId,
 
         [Parameter(Mandatory = $true)]
         [string] $EnvironmentId,
@@ -128,7 +139,9 @@ function Get-D365LcsDeploymentStatus {
 
         [switch] $WaitForCompletion,
 
-        [int] $SleepInSeconds = 300
+        [int] $SleepInSeconds = 300,
+
+        [switch] $EnableException
     )
 
     process {
@@ -142,9 +155,9 @@ function Get-D365LcsDeploymentStatus {
             Write-PSFMessage -Level Verbose -Message "Sleeping before hitting the LCS API for Deployment Status"
 
             Start-Sleep -Seconds $SleepInSeconds
-            $deploymentStatus = Get-LcsDeploymentStatus -BearerToken $BearerToken -ProjectId $ProjectId -ActionHistoryId $ActionHistoryId -EnvironmentId $EnvironmentId -LcsApiUri $LcsApiUri
+            $deploymentStatus = Get-LcsDeploymentStatus -BearerToken $BearerToken -ProjectId $ProjectId -ActivityId $ActivityId -EnvironmentId $EnvironmentId -LcsApiUri $LcsApiUri
         }
-        while ((($deploymentStatus.LcsEnvironmentActionStatus -eq "InProgress") -or ($deploymentStatus.LcsEnvironmentActionStatus -eq "NotStarted") -or ($deploymentStatus.LcsEnvironmentActionStatus -eq "PreparingEnvironment")) -and $WaitForCompletion)
+        while ((($deploymentStatus.OperationStatus -eq "InProgress") -or ($deploymentStatus.OperationStatus -eq "NotStarted") -or ($deploymentStatus.OperationStatus -eq "PreparingEnvironment")) -and $WaitForCompletion)
 
         Invoke-TimeSignal -End
 

@@ -12,9 +12,14 @@ Clear out data for a table inside the bacpac file
 
 ## SYNTAX
 
+### Copy (Default)
 ```
-Clear-D365TableDataFromBacpac [-Path] <String> [-TableName] <String[]> [-OutputPath] <String>
- [<CommonParameters>]
+Clear-D365TableDataFromBacpac -Path <String> -TableName <String[]> -OutputPath <String> [<CommonParameters>]
+```
+
+### Keep
+```
+Clear-D365TableDataFromBacpac -Path <String> -TableName <String[]> [-ClearFromSource] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -42,10 +47,36 @@ It uses "C:\Temp\AXBD_Cleaned.bacpac" as the OutputPath to where it will store t
 Clear-D365TableDataFromBacpac -Path "C:\Temp\AxDB.bacpac" -TableName "dbo.BATCHHISTORY","BATCHJOBHISTORY" -OutputPath "C:\Temp\AXBD_Cleaned.bacpac"
 ```
 
-This will remove the data from the BatchJobHistory table from inside the bacpac file.
+This will remove the data from the dbo.BatchHistory and BatchJobHistory table from inside the bacpac file.
 
 It uses "C:\Temp\AxDB.bacpac" as the Path for the bacpac file.
 It uses "dbo.BATCHHISTORY","BATCHJOBHISTORY" as the TableName to delete data from.
+It uses "C:\Temp\AXBD_Cleaned.bacpac" as the OutputPath to where it will store the updated bacpac file.
+
+### EXAMPLE 3
+```
+Clear-D365TableDataFromBacpac -Path "C:\Temp\AxDB.bacpac" -TableName "dbo.BATCHHISTORY","BATCHJOBHISTORY" -ClearFromSource
+```
+
+This will remove the data from the dbo.BatchHistory and BatchJobHistory table from inside the bacpac file.
+
+It uses "C:\Temp\AxDB.bacpac" as the Path for the bacpac file.
+It uses "dbo.BATCHHISTORY","BATCHJOBHISTORY" as the TableName to delete data from.
+
+Caution:
+It will remove from the source "C:\Temp\AxDB.bacpac" directly.
+So if the original file is important for further processing, please consider the risks carefully.
+
+### EXAMPLE 4
+```
+Clear-D365TableDataFromBacpac -Path "C:\Temp\AxDB.bacpac" -TableName "CustomTableNameThatDoesNotExists","BATCHJOBHISTORY" -OutputPath "C:\Temp\AXBD_Cleaned.bacpac" -ErrorAction SilentlyContinue
+```
+
+This will remove the data from the BatchJobHistory table from inside the bacpac file.
+
+It uses "C:\Temp\AxDB.bacpac" as the Path for the bacpac file.
+It uses "CustomTableNameThatDoesNotExists","BATCHJOBHISTORY" as the TableName to delete data from.
+It respects the respects the ErrorAction "SilentlyContinue", and will continue removing tables from the bacpac file, even when some tables are missing.
 It uses "C:\Temp\AXBD_Cleaned.bacpac" as the OutputPath to where it will store the updated bacpac file.
 
 ## PARAMETERS
@@ -61,7 +92,7 @@ Parameter Sets: (All)
 Aliases: BacpacFile, File
 
 Required: True
-Position: 1
+Position: Named
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
@@ -74,13 +105,16 @@ Supports an array of table names
 
 If a schema name isn't supplied as part of the table name, the cmdlet will prefix it with "dbo."
 
+Supports wildcard searching e.g.
+"Sales*" will delete all "dbo.Sales*" tables in the bacpac file
+
 ```yaml
 Type: String[]
 Parameter Sets: (All)
 Aliases:
 
 Required: True
-Position: 2
+Position: Named
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
@@ -91,12 +125,29 @@ Path to where you want the updated bacpac file to be saved
 
 ```yaml
 Type: String
-Parameter Sets: (All)
+Parameter Sets: Copy
 Aliases:
 
 Required: True
-Position: 3
+Position: Named
 Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -ClearFromSource
+Instruct the cmdlet to delete tables directly from the source file
+
+It will save disk space and time, because it doesn't have to create a copy of the bacpac file, before deleting tables from it
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: Keep
+Aliases:
+
+Required: True
+Position: Named
+Default value: False
 Accept pipeline input: False
 Accept wildcard characters: False
 ```

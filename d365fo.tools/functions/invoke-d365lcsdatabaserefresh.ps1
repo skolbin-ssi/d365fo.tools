@@ -34,6 +34,12 @@
         Valid options:
         "https://lcsapi.lcs.dynamics.com"
         "https://lcsapi.eu.lcs.dynamics.com"
+        "https://lcsapi.fr.lcs.dynamics.com"
+        "https://lcsapi.sa.lcs.dynamics.com"
+        "https://lcsapi.uae.lcs.dynamics.com"
+        "https://lcsapi.ch.lcs.dynamics.com"
+        "https://lcsapi.lcs.dynamics.cn"
+        "https://lcsapi.gov.lcs.microsoftdynamics.us"
         
         Default value can be configured using Set-D365LcsApiConfig
         
@@ -45,6 +51,10 @@
         Default output from this cmdlet is 2 (two) different objects. The first object is the response object for starting the refresh operation. The second object is the response object from fetching the status of the refresh operation.
         
         Setting this parameter (activate it), will affect the number of output objects. If you skip, only the first response object outputted.
+        
+    .PARAMETER EnableException
+        This parameters disables user-friendly warnings and enables the throwing of exceptions
+        This is less user friendly, but allows catching exceptions in calling scripts
         
     .EXAMPLE
         PS C:\> Invoke-D365LcsDatabaseRefresh -ProjectId 123456789 -SourceEnvironmentId "958ae597-f089-4811-abbd-c1190917eaae" -TargetEnvironmentId "13cc7700-c13b-4ea3-81cd-2d26fa72ec5e" -BearerToken "JldjfafLJdfjlfsalfd..." -LcsApiUri "https://lcsapi.lcs.dynamics.com"
@@ -83,9 +93,6 @@
         All default values will come from the configuration available from Get-D365LcsApiConfig.
         
         The default values can be configured using Set-D365LcsApiConfig.
-        
-        
-        $databaseRefresh = Invoke-D365LcsDatabaseRefresh -SourceEnvironmentId be9aa4a4-7621-4b7e-b6f5-d518bf0012de -TargetEnvironmentId 43bcc00a-d94c-47cd-a20f-3c7aee98b5a9
         
     .EXAMPLE
         PS C:\> Invoke-D365LcsDatabaseRefresh -SourceEnvironmentId "958ae597-f089-4811-abbd-c1190917eaae" -TargetEnvironmentId "13cc7700-c13b-4ea3-81cd-2d26fa72ec5e" -SkipInitialStatusFetch
@@ -140,10 +147,8 @@ function Invoke-D365LcsDatabaseRefresh {
     [CmdletBinding()]
     [OutputType()]
     param(
-        [Parameter(Mandatory = $false)]
         [int] $ProjectId = $Script:LcsApiProjectId,
         
-        [Parameter(Mandatory = $false)]
         [Alias('Token')]
         [string] $BearerToken = $Script:LcsApiBearerToken,
 
@@ -153,10 +158,11 @@ function Invoke-D365LcsDatabaseRefresh {
         [Parameter(Mandatory = $true)]
         [string] $TargetEnvironmentId,
 
-        [Parameter(Mandatory = $false)]
         [string] $LcsApiUri = $Script:LcsApiLcsApiUri,
 
-        [switch] $SkipInitialStatusFetch
+        [switch] $SkipInitialStatusFetch,
+
+        [switch] $EnableException
     )
 
     Invoke-TimeSignal -Start

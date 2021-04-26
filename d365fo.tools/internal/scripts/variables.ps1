@@ -1,11 +1,11 @@
-﻿$Script:TimeSignals = @{}
+﻿$Script:TimeSignals = @{ }
 
 Write-PSFMessage -Level Verbose -Message "Gathering all variables to assist the different cmdlets to function"
 
 $serviceDrive = ($env:ServiceDrive) -replace " ", ""
 
 # When a local Tier1 machine is domain joined, the domain users will not have the %ServiceDrive% environment variable
-if([system.string]::IsNullOrEmpty($serviceDrive)) {
+if ([system.string]::IsNullOrEmpty($serviceDrive)) {
     $serviceDrive = "c:"
 
     Write-PSFMessage -Level Host -Message "Unable to locate the %ServiceDrive% environment variable. It could indicate that the machine is either not configured with D365FO or that you have domain joined a local Tier1. We have defaulted to <c='em'>c:\</c>"
@@ -51,7 +51,7 @@ $Script:MetaDataDir = $environment.Aos.MetadataDirectory
 $Script:BinDirTools = $environment.Common.DevToolsBinDir
 
 $Script:ServerRole = [ServerRole]::Unknown
-$RoleVaule = $(If ($environment.Monitoring.MARole -eq "" -or $environment.Monitoring.MARole -eq "dev") {"Development"} Else {$environment.Monitoring.MARole})
+$RoleVaule = $(If ($environment.Monitoring.MARole -eq "" -or $environment.Monitoring.MARole -eq "dev") { "Development" } Else { $environment.Monitoring.MARole })
 
 if ($null -ne $RoleVaule) {
     $Script:ServerRole = [ServerRole][Enum]::Parse([type]"ServerRole", $RoleVaule, $true);
@@ -107,18 +107,10 @@ $RegSplat = @{
     Name = "InstallationInfoDirectory"
 }
 
-$RegValue = $( if (Test-RegistryValue @RegSplat) {Join-Path (Get-ItemPropertyValue @RegSplat) "InstallationRecords"} else {""} )
+$RegValue = $( if (Test-RegistryValue @RegSplat) { Join-Path (Get-ItemPropertyValue @RegSplat) "InstallationRecords" } else { "" } )
 $Script:InstallationRecordsDir = $RegValue
 
 $Script:UserIsAdmin = $env:UserName -like "*admin*"
-
-if ($null -ne (Get-PSFConfigValue -FullName "d365fo.tools.active.azure.storage.account")) {
-    $azure = Get-PSFConfigValue -FullName "d365fo.tools.active.azure.storage.account"
-    $Script:AccountId = $azure.AccountId
-    $Script:AccessToken = $azure.AccessToken
-    $Script:Container = $azure.Container
-    $Script:SAS = $azure.SAS
-}
 
 $Script:TfDir = "C:\Program Files (x86)\Microsoft Visual Studio 14.0\Common7\IDE\"
 
@@ -149,10 +141,13 @@ Update-LcsApiVariables
 
 $maskOutput = @(
     "AccessToken",
+    "AzureStorageAccessToken",
     "Token",
     "BearerToken",
     "Password",
-    "RefreshToken"
+    "RefreshToken",
+    "SAS"
+    "AzureStorageSAS"
 )
 
 #Active broadcast message config extraction
@@ -161,11 +156,14 @@ Update-BroadcastVariables
 #Update different PSF Configuration variables values
 Update-PsfConfigVariables
 
+#Active Azure Storage Configuration variables values
+Update-AzureStorageVariables
+
 (Get-Variable -Scope Script) | ForEach-Object {
     $val = $null
 
     if ($maskOutput -contains $($_.Name)) {
-        $val = "The variable was found - but the content masked while outputting."
+        $val = "The variable was found - [...REDACTED...]"
     }
     else {
         $val = $($_.Value)

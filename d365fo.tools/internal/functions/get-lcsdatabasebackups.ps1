@@ -20,6 +20,16 @@
         Valid options:
         "https://lcsapi.lcs.dynamics.com"
         "https://lcsapi.eu.lcs.dynamics.com"
+        "https://lcsapi.fr.lcs.dynamics.com"
+        "https://lcsapi.sa.lcs.dynamics.com"
+        "https://lcsapi.uae.lcs.dynamics.com"
+        "https://lcsapi.ch.lcs.dynamics.com"
+        "https://lcsapi.lcs.dynamics.cn"
+        "https://lcsapi.gov.lcs.microsoftdynamics.us"
+        
+    .PARAMETER EnableException
+        This parameters disables user-friendly warnings and enables the throwing of exceptions
+        This is less user friendly, but allows catching exceptions in calling scripts
         
     .EXAMPLE
         PS C:\> Get-D365LcsDatabaseBackups -ProjectId 123456789 -BearerToken "JldjfafLJdfjlfsalfd..." -LcsApiUri "https://lcsapi.lcs.dynamics.com"
@@ -46,7 +56,9 @@ function Get-LcsDatabaseBackups {
         [string] $BearerToken,
         
         [Parameter(Mandatory = $true)]
-        [string] $LcsApiUri
+        [string] $LcsApiUri,
+
+        [switch] $EnableException
     )
 
     Invoke-TimeSignal -Start
@@ -55,7 +67,8 @@ function Get-LcsDatabaseBackups {
     
     $client = New-Object -TypeName System.Net.Http.HttpClient
     $client.DefaultRequestHeaders.Clear()
-
+    $client.DefaultRequestHeaders.UserAgent.ParseAdd("d365fo.tools via PowerShell")
+    
     $deployStatusUri = "$LcsApiUri/databasemovement/v1/databases/project/$($ProjectId)"
     
     $request = New-JsonRequest -Uri $deployStatusUri -Token $BearerToken -HttpMethod "GET"
@@ -80,10 +93,10 @@ function Get-LcsDatabaseBackups {
             if (($databasesObject) -and ($databasesObject.ErrorMessage)) {
                 $errorText = ""
                 if ($databasesObject.OperationActivityId) {
-                    $errorText = "Error $( $databasesObject.ErrorMessage) in request for status of environment servicing action: '$( $databasesObject.ErrorMessage)' (Activity Id: '$( $databasesObject.OperationActivityId)')"
+                    $errorText = "Error $( $databasesObject.ErrorMessage) in request for listing all bacpacs and backup from the asset library of LCS: '$( $databasesObject.ErrorMessage)' (Activity Id: '$( $databasesObject.OperationActivityId)')"
                 }
                 else {
-                    $errorText = "Error $( $databasesObject.ErrorMessage) in request for status of environment servicing action: '$( $databasesObject.ErrorMessage)'"
+                    $errorText = "Error $( $databasesObject.ErrorMessage) in request for listing all bacpacs and backup from the asset library of LCS: '$( $databasesObject.ErrorMessage)'"
                 }
             }
             elseif ($databasesObject.OperationActivityId) {
@@ -93,7 +106,7 @@ function Get-LcsDatabaseBackups {
                 $errorText = "API Call returned $($result.StatusCode): $($result.ReasonPhrase)"
             }
 
-            Write-PSFMessage -Level Host -Message "Error creating new file asset." -Target $($databasesObject.ErrorMessage)
+            Write-PSFMessage -Level Host -Message "Error listing bacpacs and backups from asset library." -Target $($databasesObject.ErrorMessage)
             Write-PSFMessage -Level Host -Message $errorText -Target $($result.ReasonPhrase)
             Stop-PSFFunction -Message "Stopping because of errors" -StepsUpward 1
         }
@@ -101,16 +114,17 @@ function Get-LcsDatabaseBackups {
         
         if (-not ( $databasesObject.IsSuccess)) {
             if ( $databasesObject.ErrorMessage) {
-                $errorText = "Error in request for status of environment servicing action: '$( $databasesObject.ErrorMessage)' (Activity Id: '$( $databasesObject.OperationActivityId)')"
+                $errorText = "Error in request for listing all bacpacs and backup from the asset library of LCS: '$( $databasesObject.ErrorMessage)' (Activity Id: '$( $databasesObject.OperationActivityId)')"
+
             }
             elseif ( $databasesObject.OperationActivityId) {
-                $errorText = "Error in request for status of environment servicing action. Activity Id: '$($activity.OperationActivityId)'"
+                $errorText = "Error in request for listing all bacpacs and backup from the asset library of LCS. Activity Id: '$($activity.OperationActivityId)'"
             }
             else {
-                $errorText = "Unknown error in request for status of environment servicing action"
+                $errorText = "Unknown error in request for listing all bacpacs and backup from the asset library of LCS"
             }
 
-            Write-PSFMessage -Level Host -Message "Unknown error creating new file asset." -Target $databasesObject
+            Write-PSFMessage -Level Host -Message "Unknown error while listing all bacpacs and backups from asset library." -Target $databasesObject
             Write-PSFMessage -Level Host -Message $errorText -Target $($result.ReasonPhrase)
             Stop-PSFFunction -Message "Stopping because of errors" -StepsUpward 1
         }

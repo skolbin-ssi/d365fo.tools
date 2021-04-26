@@ -14,7 +14,8 @@
     .EXAMPLE
         PS C:\> Set-D365DefaultModelForNewProjects -Model "FleetManagement"
         
-        This will update the current default module registered in the "..Documents\Visual Studio 2015\Settings\DynamicsDevConfig.xml" file.
+        This will update the current default module registered in the "DynamicsDevConfig.xml" file.
+        This file is located in Documents\Visual Studio Dynamics 365\ or in Documents\Visual Studio 2015\Settings\ depending on the version.
         It will backup the current "DynamicsDevConfig.xml" file.
         It will replace the value inside the "DefaultModelForNewProjects" tag.
         
@@ -42,24 +43,27 @@ function Set-D365DefaultModelForNewProjects {
     )
 
     begin {
-        $filePath = "C:\Users\$env:UserName\Documents\Visual Studio 2015\Settings\DynamicsDevConfig.xml"
+        $filePath = "$env:UserProfile\Documents\Visual Studio Dynamics 365\DynamicsDevConfig.xml"
+        if (-not (Test-PathExists -Path $filePath -Type Leaf)) {
+            $filePath = "$env:UserProfile\Documents\Visual Studio 2015\Settings\DynamicsDevConfig.xml"
+        }
 
         if (-not (Test-PathExists -Path $filePath -Type Leaf)) { return }
     }
 
     process {
         if (Test-PSFFunctionInterrupt) { return }
-        
+
         $filePathBackup = $filePath.Replace(".xml", ".xml$((Get-Date).Ticks)")
         Copy-Item -Path $filePath -Destination $filePathBackup -Force
 
         $namespace = @{ns = "http://schemas.microsoft.com/dynamics/2012/03/development/configuration" }
-    
+
         $xmlDoc = [xml] (Get-Content -Path $filePath)
         $defaultModel = Select-Xml -Xml $xmlDoc -XPath "/ns:DynamicsDevConfig/ns:DefaultModelForNewProjects" -Namespace $namespace
 
         $oldValue = $defaultModel.Node.InnerText
-    
+
         Write-PSFMessage -Level Verbose -Message "Old value found in the file was: $oldValue" -Target $oldValue
 
         $defaultModel.Node.InnerText = $Module

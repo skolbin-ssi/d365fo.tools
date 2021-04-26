@@ -30,6 +30,16 @@
         Valid options:
         "https://lcsapi.lcs.dynamics.com"
         "https://lcsapi.eu.lcs.dynamics.com"
+        "https://lcsapi.fr.lcs.dynamics.com"
+        "https://lcsapi.sa.lcs.dynamics.com"
+        "https://lcsapi.uae.lcs.dynamics.com"
+        "https://lcsapi.ch.lcs.dynamics.com"
+        "https://lcsapi.lcs.dynamics.cn"
+        "https://lcsapi.gov.lcs.microsoftdynamics.us"
+        
+    .PARAMETER EnableException
+        This parameters disables user-friendly warnings and enables the throwing of exceptions
+        This is less user friendly, but allows catching exceptions in calling scripts
         
     .EXAMPLE
         PS C:\> Start-LcsDatabaseRefresh -ProjectId 123456789 -SourceEnvironmentId "958ae597-f089-4811-abbd-c1190917eaae" -TargetEnvironmentId "13cc7700-c13b-4ea3-81cd-2d26fa72ec5e" -BearerToken "JldjfafLJdfjlfsalfd..." -LcsApiUri "https://lcsapi.lcs.dynamics.com"
@@ -68,7 +78,9 @@ function Start-LcsDatabaseRefresh {
         [string] $TargetEnvironmentId,
 
         [Parameter(Mandatory = $true)]
-        [string] $LcsApiUri
+        [string] $LcsApiUri,
+
+        [switch] $EnableException
     )
 
     Invoke-TimeSignal -Start
@@ -77,7 +89,8 @@ function Start-LcsDatabaseRefresh {
     
     $client = New-Object -TypeName System.Net.Http.HttpClient
     $client.DefaultRequestHeaders.Clear()
-
+    $client.DefaultRequestHeaders.UserAgent.ParseAdd("d365fo.tools via PowerShell")
+    
     $deployUri = "$LcsApiUri/databasemovement/v1/refresh/project/$($ProjectId)/source/$($SourceEnvironmentId)/target/$($TargetEnvironmentId)"
 
     $request = New-JsonRequest -Uri $deployUri -Token $BearerToken -HttpMethod "POST"

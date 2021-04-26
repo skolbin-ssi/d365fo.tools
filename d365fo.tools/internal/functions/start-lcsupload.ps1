@@ -22,9 +22,18 @@
         "GER Configuration"
         "Data Package"
         "PowerBI Report Model"
+        "E-Commerce Package"
+        "NuGet Package"
+        "Retail Self-Service Package"
+        "Commerce Cloud Scale Unit Extension"
         
     .PARAMETER Name
         Name to be assigned / shown on LCS
+        
+    .PARAMETER Filename
+        Filename to be assigned / shown on LCS
+        
+        Often will it require an extension for it to be accepted
         
     .PARAMETER Description
         Description to be assigned / shown on LCS
@@ -37,14 +46,24 @@
         Valid options:
         "https://lcsapi.lcs.dynamics.com"
         "https://lcsapi.eu.lcs.dynamics.com"
+        "https://lcsapi.fr.lcs.dynamics.com"
+        "https://lcsapi.sa.lcs.dynamics.com"
+        "https://lcsapi.uae.lcs.dynamics.com"
+        "https://lcsapi.ch.lcs.dynamics.com"
+        "https://lcsapi.lcs.dynamics.cn"
+        "https://lcsapi.gov.lcs.microsoftdynamics.us"
+        
+    .PARAMETER EnableException
+        This parameters disables user-friendly warnings and enables the throwing of exceptions
+        This is less user friendly, but allows catching exceptions in calling scripts
         
     .EXAMPLE
-        PS C:\> Start-LcsUpload -Token "Bearer JldjfafLJdfjlfsalfd..." -ProjectId 123456789 -FileType "DatabaseBackup" -Name "ReadyForTesting" -Description "Contains all customers & vendors" -LcsApiUri "https://lcsapi.lcs.dynamics.com"
+        PS C:\> Start-LcsUpload -Token "Bearer JldjfafLJdfjlfsalfd..." -ProjectId 123456789 -FileType "SoftwareDeployablePackage" -Name "ReadyForTesting" -Filename "ReadyForTesting.zip" -Description "Latest release that fixes it all" -LcsApiUri "https://lcsapi.lcs.dynamics.com"
         
         This will contact the NON-EUROPE LCS API and instruct it that we want to upload a new file to the Asset Library.
         The token "Bearer JldjfafLJdfjlfsalfd..." is used to the authorize against the LCS API.
-        The ProjectId is 123456789 and FileType is "DatabaseBackup".
-        The file will be named "ReadyForTesting" and the Description will be "Contains all customers & vendors".
+        The ProjectId is 123456789 and FileType is "SoftwareDeployablePackage".
+        The file will be named "ReadyForTesting" and the Description will be "Latest release that fixes it all".
         
     .NOTES
         Tags: Url, LCS, Upload, Api, Token
@@ -64,16 +83,17 @@ function Start-LcsUpload {
         [int] $ProjectId,
 
         [Parameter(Mandatory = $true)]
-        [string] $FileType,
+        [LcsAssetFileType] $FileType,
 
-        [Parameter(Mandatory = $false)]
         [string] $Name,
 
-        [Parameter(Mandatory = $false)]
+        [string] $Filename,
+
         [string] $Description,
 
-        [Parameter(Mandatory = $false)]
-        [string] $LcsApiUri
+        [string] $LcsApiUri,
+
+        [switch] $EnableException
     )
 
     Invoke-TimeSignal -Start
@@ -84,25 +104,16 @@ function Start-LcsUpload {
     else {
         $jsonDescription = "`"$Description`""
     }
-    
-    $fileTypeValue = 0
 
-    switch ($FileType) {
-        "Model" { $fileTypeValue = 1 }
-        "Process Data Package" { $fileTypeValue = 4 }
-        "Software Deployable Package" { $fileTypeValue = 10 }
-        "GER Configuration" { $fileTypeValue = 12 }
-        "Data Package" { $fileTypeValue = 15 }
-        "PowerBI Report Model" { $fileTypeValue = 19 }
-    }
-
-    $jsonFile = "{ `"Name`": `"$Name`", `"FileName`": `"$fileName`", `"FileDescription`": $jsonDescription, `"SizeByte`": 0, `"FileType`": $fileTypeValue }"
+    $fileTypeValue = [int]$FileType
+    $jsonFile = "{ `"Name`": `"$Name`", `"FileName`": `"$Filename`", `"FileDescription`": $jsonDescription, `"SizeByte`": 0, `"FileType`": $fileTypeValue }"
 
     Write-PSFMessage -Level Verbose -Message "Json payload for LCS generated." -Target $jsonFile
     
     $client = New-Object -TypeName System.Net.Http.HttpClient
     $client.DefaultRequestHeaders.Clear()
-
+    $client.DefaultRequestHeaders.UserAgent.ParseAdd("d365fo.tools via PowerShell")
+    
     $createUri = "$LcsApiUri/box/fileasset/CreateFileAsset/$ProjectId"
 
     $request = New-JsonRequest -Uri $createUri -Content $jsonFile -Token $Token
@@ -127,29 +138,31 @@ function Start-LcsUpload {
         
         if (-not ($result.StatusCode -eq [System.Net.HttpStatusCode]::OK)) {
             if (($asset) -and ($asset.Message)) {
-                Write-PSFMessage -Level Host -Message "Error creating new file asset." -Target $($asset.Message)
-                Stop-PSFFunction -Message "Stopping because of errors"
+                Write-PSFMessage -Level Host -Message "Error creating new file asset. $($asset.Message)" -Target $($asset.Message)
+                Stop-PSFFunction -Message "Stopping because of errors" -StepsUpward 1
+                return
             }
             else {
                 Write-PSFMessage -Level Host -Message "API Call returned $($result.StatusCode)." -Target $($result.ReasonPhrase)
-                Stop-PSFFunction -Message "Stopping because of errors"
+                Stop-PSFFunction -Message "Stopping because of errors" -StepsUpward 1
+                return
             }
         }
 
         if (-not ($asset.Id)) {
             if ($asset.Message) {
                 Write-PSFMessage -Level Host -Message "Error creating new file asset." -Target $($asset.Message)
-                Stop-PSFFunction -Message "Stopping because of errors"
+                Stop-PSFFunction -Message "Stopping because of errors" -StepsUpward 1
             }
             else {
                 Write-PSFMessage -Level Host -Message "Unknown error creating new file asset." -Target $asset
-                Stop-PSFFunction -Message "Stopping because of errors"
+                Stop-PSFFunction -Message "Stopping because of errors" -StepsUpward 1
             }
         }
     }
     catch {
         Write-PSFMessage -Level Host -Message "Something went wrong while working against the LCS API." -Exception $PSItem.Exception
-        Stop-PSFFunction -Message "Stopping because of errors"
+        Stop-PSFFunction -Message "Stopping because of errors" -StepsUpward 1
         return
     }
 

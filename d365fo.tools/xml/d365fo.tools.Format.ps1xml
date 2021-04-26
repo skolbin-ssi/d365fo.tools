@@ -116,6 +116,9 @@
 							<ListItem>
 								<PropertyName>File</PropertyName>
 							</ListItem>
+							<ListItem>
+								<PropertyName>SourceUri</PropertyName>
+							</ListItem>
 						</ListItems>
 					</ListEntry>
 				</ListEntries>
@@ -562,6 +565,71 @@
 				</TableRowEntries>
 			</TableControl>
 		</View>
-		
+		<View>
+			<Name>D365FO.TOOLS.FileObject</Name>
+			<ViewSelectedBy>
+				<TypeName>D365FO.TOOLS.FileObject</TypeName>
+			</ViewSelectedBy>
+			<ListControl>
+				<ListEntries>
+					<ListEntry>
+						<ListItems>
+							<ListItem>
+								<PropertyName>Filename</PropertyName>
+							</ListItem>
+							<ListItem>
+								<PropertyName>LastModified</PropertyName>
+							</ListItem>
+							<ListItem>
+								<PropertyName>File</PropertyName>
+							</ListItem>
+						</ListItems>
+					</ListEntry>
+				</ListEntries>
+			</ListControl>
+		</View>
+		<View>
+			<Name>D365FO.TOOLS.Bacpac.Table</Name>
+			<ViewSelectedBy>
+				<TypeName>D365FO.TOOLS.Bacpac.Table</TypeName>
+			</ViewSelectedBy>
+			<TableControl>
+				<TableHeaders>
+					<TableColumnHeader>
+						<Width>70</Width>
+					</TableColumnHeader>
+					<TableColumnHeader>
+						<Width>12</Width>
+						<Alignment>Right</Alignment>
+					</TableColumnHeader>
+					<TableColumnHeader>
+						<Width>14</Width>
+						<Alignment>Right</Alignment>
+					</TableColumnHeader>
+					<TableColumnHeader>
+						<Width>9</Width>
+						<Alignment>Right</Alignment>
+					</TableColumnHeader>
+				</TableHeaders>
+				<TableRowEntries>
+					<TableRowEntry>
+						<TableColumnItems>
+							<TableColumnItem>
+								<PropertyName>Name</PropertyName>
+							</TableColumnItem>
+							<TableColumnItem>
+								<PropertyName>OriginalSize</PropertyName>
+							</TableColumnItem>
+							<TableColumnItem>
+								<PropertyName>CompressedSize</PropertyName>
+							</TableColumnItem>
+							<TableColumnItem>
+								<PropertyName>BulkFiles</PropertyName>
+							</TableColumnItem>
+						</TableColumnItems>
+					</TableRowEntry>
+				</TableRowEntries>
+			</TableControl>
+		</View>
 	</ViewDefinitions>
 </Configuration>
