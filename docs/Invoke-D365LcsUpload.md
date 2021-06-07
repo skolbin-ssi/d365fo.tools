@@ -15,7 +15,8 @@ Upload a file to a LCS project
 ```
 Invoke-D365LcsUpload [[-ProjectId] <Int32>] [[-BearerToken] <String>] [-FilePath] <String>
  [[-FileType] <LcsAssetFileType>] [[-Name] <String>] [[-Filename] <String>] [[-FileDescription] <String>]
- [[-LcsApiUri] <String>] [-EnableException] [<CommonParameters>]
+ [[-LcsApiUri] <String>] [-FailOnErrorMessage] [[-RetryTimeout] <TimeSpan>] [-EnableException]
+ [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -58,6 +59,18 @@ Invoke-D365LcsUpload -FilePath "C:\temp\d365fo.tools\Release-2019-05-05.zip"
 ```
 
 This will start the upload of a file to the Asset Library.
+The file that will be uploaded is based on the FilePath "C:\temp\d365fo.tools\Release-2019-05-05.zip".
+
+All default values will come from the configuration available from Get-D365LcsApiConfig.
+
+The default values can be configured using Set-D365LcsApiConfig.
+
+### EXAMPLE 4
+```
+Invoke-D365LcsUpload -FilePath "C:\temp\d365fo.tools\Release-2019-05-05.zip" -RetryTimeout "00:01:00"
+```
+
+This will start the upload of a file to the Asset Library through the LCS API, and allow for the cmdlet to retry for no more than 1 minute.
 The file that will be uploaded is based on the FilePath "C:\temp\d365fo.tools\Release-2019-05-05.zip".
 
 All default values will come from the configuration available from Get-D365LcsApiConfig.
@@ -217,6 +230,53 @@ Aliases:
 Required: False
 Position: 8
 Default value: $Script:LcsApiLcsApiUri
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -FailOnErrorMessage
+Instruct the cmdlet to write logging information to the console, if there is an error message in the response from the LCS endpoint
+
+Used in combination with either Enable-D365Exception cmdlet, or the -EnableException directly on this cmdlet, it will throw an exception and break/stop execution of the script
+This allows you to implement custom retry / error handling logic
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: (All)
+Aliases:
+
+Required: False
+Position: Named
+Default value: False
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -RetryTimeout
+The retry timeout, before the cmdlet should quit retrying based on the 429 status code
+
+Needs to be provided in the timspan notation:
+"hh:mm:ss"
+
+hh is the number of hours, numerical notation only
+mm is the number of minutes
+ss is the numbers of seconds
+
+Each section of the timeout has to valid, e.g.
+hh can maximum be 23
+mm can maximum be 59
+ss can maximum be 59
+
+Not setting this parameter will result in the cmdlet to try for ever to handle the 429 push back from the endpoint
+
+```yaml
+Type: TimeSpan
+Parameter Sets: (All)
+Aliases:
+
+Required: False
+Position: 9
+Default value: 00:00:00
 Accept pipeline input: False
 Accept wildcard characters: False
 ```

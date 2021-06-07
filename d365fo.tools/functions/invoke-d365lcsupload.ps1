@@ -64,6 +64,29 @@
         
         Default value can be configured using Set-D365LcsApiConfig
         
+    .PARAMETER FailOnErrorMessage
+        Instruct the cmdlet to write logging information to the console, if there is an error message in the response from the LCS endpoint
+        
+        Used in combination with either Enable-D365Exception cmdlet, or the -EnableException directly on this cmdlet, it will throw an exception and break/stop execution of the script
+        This allows you to implement custom retry / error handling logic
+        
+    .PARAMETER RetryTimeout
+        The retry timeout, before the cmdlet should quit retrying based on the 429 status code
+        
+        Needs to be provided in the timspan notation:
+        "hh:mm:ss"
+        
+        hh is the number of hours, numerical notation only
+        mm is the number of minutes
+        ss is the numbers of seconds
+        
+        Each section of the timeout has to valid, e.g.
+        hh can maximum be 23
+        mm can maximum be 59
+        ss can maximum be 59
+        
+        Not setting this parameter will result in the cmdlet to try for ever to handle the 429 push back from the endpoint
+        
     .PARAMETER EnableException
         This parameters disables user-friendly warnings and enables the throwing of exceptions
         This is less user friendly, but allows catching exceptions in calling scripts
@@ -97,6 +120,16 @@
         PS C:\> Invoke-D365LcsUpload -FilePath "C:\temp\d365fo.tools\Release-2019-05-05.zip"
         
         This will start the upload of a file to the Asset Library.
+        The file that will be uploaded is based on the FilePath "C:\temp\d365fo.tools\Release-2019-05-05.zip".
+        
+        All default values will come from the configuration available from Get-D365LcsApiConfig.
+        
+        The default values can be configured using Set-D365LcsApiConfig.
+        
+    .EXAMPLE
+        PS C:\> Invoke-D365LcsUpload -FilePath "C:\temp\d365fo.tools\Release-2019-05-05.zip" -RetryTimeout "00:01:00"
+        
+        This will start the upload of a file to the Asset Library through the LCS API, and allow for the cmdlet to retry for no more than 1 minute.
         The file that will be uploaded is based on the FilePath "C:\temp\d365fo.tools\Release-2019-05-05.zip".
         
         All default values will come from the configuration available from Get-D365LcsApiConfig.
@@ -153,6 +186,10 @@ function Invoke-D365LcsUpload {
 
         [string] $LcsApiUri = $Script:LcsApiLcsApiUri,
 
+        [switch] $FailOnErrorMessage,
+        
+        [Timespan] $RetryTimeout = "00:00:00",
+        
         [switch] $EnableException
     )
 
@@ -172,9 +209,16 @@ function Invoke-D365LcsUpload {
         $BearerToken = "Bearer $BearerToken"
     }
     
-    $blobDetails = Start-LcsUpload -Token $BearerToken -ProjectId $ProjectId -FileType $FileType -LcsApiUri $LcsApiUri -Name $Name -FileName $Filename -Description $FileDescription
+    $blobDetails = Start-LcsUploadV2 -Token $BearerToken -ProjectId $ProjectId -FileType $FileType -LcsApiUri $LcsApiUri -Name $Name -FileName $Filename -Description $FileDescription -RetryTimeout $RetryTimeout
 
     if (Test-PSFFunctionInterrupt) { return }
+
+    if ($FailOnErrorMessage -and $blobDetails.ErrorMessage) {
+        $messageString = "The request against LCS succeeded, but the response was an error message for the operation: <c='em'>$($blobDetails.ErrorMessage)</c>."
+        $errorMessagePayload = "`r`n$($blobDetails | ConvertTo-Json)"
+        Write-PSFMessage -Level Host -Message $messageString -Exception $([System.Exception]::new($($errorMessagePayload))) -Target $blobDetails
+        Stop-PSFFunction -Message "Stopping because of errors." -Exception $([System.Exception]::new($($errorMessagePayload))) -Target $blobDetails
+    }
 
     Write-PSFMessage -Level Verbose -Message "Start response" -Target $blobDetails
 
@@ -184,17 +228,24 @@ function Invoke-D365LcsUpload {
 
     Write-PSFMessage -Level Verbose -Message "Upload response" -Target $uploadResponse
 
-    $ackResponse = Complete-LcsUpload -Token $BearerToken -ProjectId $ProjectId -AssetId $blobDetails.Id -LcsApiUri $LcsApiUri
+    $ackResponse = Complete-LcsUploadV2 -Token $BearerToken -ProjectId $ProjectId -AssetId $blobDetails.Id -LcsApiUri $LcsApiUri -RetryTimeout $RetryTimeout
 
     if (Test-PSFFunctionInterrupt) { return }
+
+    if ($FailOnErrorMessage -and $ackResponse.ErrorMessage) {
+        $messageString = "The request against LCS succeeded, but the response was an error message for the operation: <c='em'>$($ackResponse.ErrorMessage)</c>."
+        $errorMessagePayload = "`r`n$($ackResponse | ConvertTo-Json)"
+        Write-PSFMessage -Level Host -Message $messageString -Exception $([System.Exception]::new($($errorMessagePayload))) -Target $ackResponse
+        Stop-PSFFunction -Message "Stopping because of errors." -Exception $([System.Exception]::new($($errorMessagePayload))) -Target $ackResponse
+    }
 
     Write-PSFMessage -Level Verbose -Message "Commit response" -Target $ackResponse
 
     Invoke-TimeSignal -End
 
     [PSCustomObject]@{
-        AssetId = $blobDetails.Id
-        Name = $Name
+        AssetId  = $blobDetails.Id
+        Name     = $Name
         Filename = $Filename
     }
 }
