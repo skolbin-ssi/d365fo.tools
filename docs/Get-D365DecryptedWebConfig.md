@@ -5,7 +5,7 @@ online version:
 schema: 2.0.0
 ---
 
-# Get-D365DecryptedConfigFile
+# Get-D365DecryptedWebConfig
 
 ## SYNOPSIS
 Decrypts the AOS config file
@@ -13,7 +13,7 @@ Decrypts the AOS config file
 ## SYNTAX
 
 ```
-Get-D365DecryptedConfigFile [[-DropPath] <String>] [[-AosServiceWebRootPath] <String>] [<CommonParameters>]
+Get-D365DecryptedWebConfig [[-OutputPath] <String>] [[-AosServiceWebRootPath] <String>]
 ```
 
 ## DESCRIPTION
@@ -23,24 +23,46 @@ Function used for decrypting the config file used by the D365 Finance & Operatio
 
 ### EXAMPLE 1
 ```
-Get-D365DecryptedConfigFile -DropPath "c:\temp\d365fo.tools"
+Get-D365DecryptedWebConfig
+```
+
+This will get the config file from the instance, decrypt it and save it.
+IT will save the decrypted web.config file in the default location: "c:\temp\d365fo.tools\WebConfigDecrypted".
+
+A result set example:
+
+Filename   LastModified        File
+--------   ------------        ----
+web.config 7/1/2021 9:01:31 PM C:\temp\d365fo.tools\WebConfigDecrypted\web.config
+
+### EXAMPLE 2
+```
+Get-D365DecryptedWebConfig -OutputPath "c:\temp\d365fo.tools"
 ```
 
 This will get the config file from the instance, decrypt it and save it to "c:\temp\d365fo.tools"
 
+A result set example:
+
+Filename   LastModified        File
+--------   ------------        ----
+web.config 7/1/2021 9:07:36 PM C:\temp\d365fo.tools\web.config
+
 ## PARAMETERS
 
-### -DropPath
+### -OutputPath
 Place where the decrypted files should be placed
+
+Default value is: "c:\temp\d365fo.tools\WebConfigDecrypted"
 
 ```yaml
 Type: String
 Parameter Sets: (All)
-Aliases: ExtractFolder
+Aliases:
 
 Required: False
-Position: 2
-Default value: C:\temp\d365fo.tools\ConfigFile_Decrypted
+Position: 1
+Default value: C:\temp\d365fo.tools\WebConfigDecrypted
 Accept pipeline input: False
 Accept wildcard characters: False
 ```
@@ -54,14 +76,11 @@ Parameter Sets: (All)
 Aliases:
 
 Required: False
-Position: 3
+Position: 2
 Default value: $Script:AOSPath
 Accept pipeline input: False
 Accept wildcard characters: False
 ```
-
-### CommonParameters
-This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable, -InformationAction, -InformationVariable, -OutVariable, -OutBuffer, -PipelineVariable, -Verbose, -WarningAction, and -WarningVariable. For more information, see [about_CommonParameters](http://go.microsoft.com/fwlink/?LinkID=113216).
 
 ## INPUTS
 
