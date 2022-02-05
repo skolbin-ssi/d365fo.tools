@@ -19,6 +19,8 @@ $Script:IsAdminRuntime = ([Security.Principal.WindowsPrincipal][Security.Princip
 
 $Script:WebConfig = "web.config"
 
+$Script:DevConfig = "DynamicsDevConfig.xml"
+
 $Script:WifServicesConfig = "wif.services.config"
 
 $Script:Hosts = 'C:\Windows\System32\drivers\etc\hosts'
@@ -93,13 +95,6 @@ $Script:InstallationRecordsDir = $RegValue
 $Script:UserIsAdmin = $env:UserName -like "*admin*"
 
 $Script:TfDir = "C:\Program Files (x86)\Microsoft Visual Studio 14.0\Common7\IDE\"
-
-if ($null -ne (Get-PSFConfigValue -FullName "d365fo.tools.active.logic.app")) {
-    $logicApp = Get-PSFConfigValue -FullName "d365fo.tools.active.logic.app"
-    $Script:LogicAppEmail = $logicApp.Email
-    $Script:LogicAppSubject = $logicApp.Subject
-    $Script:LogicAppUrl = $logicApp.Url
-}
 
 $Script:SQLTools = "C:\Program Files (x86)\Microsoft SQL Server\130\Tools\Binn"
 

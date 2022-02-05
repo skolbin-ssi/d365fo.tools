@@ -3,7 +3,7 @@
 	RootModule        = 'd365fo.tools.psm1'
 
 	# Version number of this module.
-	ModuleVersion     = '0.6.66'
+	ModuleVersion     = '0.6.70'
 
 	# ID used to uniquely identify this module
 	GUID              = '7c7b26d4-f764-4cb0-a692-459a0a689dbb'
@@ -51,6 +51,7 @@
 		'Add-D365RsatWifConfigAuthorityThumbprint',
 		'Add-D365WindowsDefenderRules',
 						
+		'Backup-D365DevConfig',
 		'Backup-D365MetaDataDir',
 		'Backup-D365Runbook',
 		'Backup-D365WebConfig',
@@ -113,13 +114,12 @@
 		'Get-D365JsonService',
 
 		'Get-D365InstalledHotfix',
-		'Get-D365InstalledPackageOld',
+		'Get-D365InstalledPackage',
 		'Get-D365InstalledService',
 		'Get-D365InstanceName',
 
 		'Get-D365Label',
 		'Get-D365Language',
-		'Get-D365LabelOld',
 		'Get-D365LabelFile',
 						
 		'Get-D365LcsApiConfig',
@@ -131,7 +131,6 @@
 		'Get-D365LcsDeploymentStatus',
 		'Get-D365LcsEnvironmentHistory',
 		'Get-D365LcsEnvironmentMetadata',
-		'Get-D365LogicAppConfig',
 
 		'Get-D365MaintenanceMode',
 		'Get-D365Model',
@@ -139,7 +138,8 @@
 		'Get-D365OfflineAuthenticationAdminEmail',
 
 		'Get-D365PackageBundleDetail',
-		'Get-D365PackageLabelFileOld',
+		'Get-D365PackageLabelResourceFile',
+		'Get-D365PackageLabelResources',
 		'Get-D365ProductInformation',
 
 		'Get-D365RsatCertificateThumbprint',
@@ -156,7 +156,6 @@
 		'Get-D365TableField',
 		'Get-D365TableSequence',
 		'Get-D365TablesInChangedTracking',
-		'Get-D365Tier2Params',
 		'Get-D365TfsUri',
 		'Get-D365TfsWorkspace',
 
@@ -165,6 +164,7 @@
 		'Get-D365UserAuthenticationDetail',
 
 		'Get-D365VisualStudioCompilerResult',
+		'Get-D365WebServerType',
 		'Get-D365WindowsActivationStatus',
 
 		'Import-D365AadUser',
@@ -219,8 +219,6 @@
 		'Invoke-D365LcsEnvironmentStart',
 		'Invoke-D365LcsEnvironmentStop',
 		'Invoke-D365LcsUpload',
-		'Invoke-D365LogicApp',
-		'Invoke-D365LogicAppMessage',
 
 		'Invoke-D365ModuleCompile',
 		'Invoke-D365ModuleLabelGeneration',
@@ -262,6 +260,8 @@
 		'Rename-D365ComputerName',
 
 		'Restart-D365Environment',
+
+		'Restore-D365DevConfig',
 		'Restore-D365WebConfig',
 
 		'Send-D365BroadcastMessage',
@@ -279,7 +279,6 @@
 
 		'Set-D365FavoriteBookmark',
 		'Set-D365LcsApiConfig',
-		'Set-D365LogicAppConfig',
 						
 		'Set-D365NugetPath',
 
@@ -294,8 +293,7 @@
 		'Set-D365SysAdmin',
 
 		'Set-D365WebConfigDatabase',
-
-		'Set-D365Tier2Params',
+		'Set-D365WebServerType',
 
 		'Set-D365TraceParserFileSize',
 
@@ -304,6 +302,7 @@
 		'Set-D365FlightServiceCatalogId',
 
 		'Start-D365Environment',
+		'Start-D365EnvironmentV2',
 		'Start-D365EventTrace',
 
 		'Stop-D365Environment',
