@@ -610,6 +610,26 @@
         "Syntax":  "ConvertTo-D365Dacpac [-Path] \u003cString\u003e [\u003cCommonParameters\u003e]"
     },
     {
+        "CommandName":  "Disable-D365Exception",
+        "Description":  "Restore the default exception behavior of the module to not support throwing exceptions\n\nUseful when the default behavior was changed with Enable-D365Exception and the default behavior should be restored",
+        "Tags":  [
+                     "Exception",
+                     "Exceptions",
+                     "Warning",
+                     "Warnings"
+                 ],
+        "Params":  [
+
+                   ],
+        "Alias":  "",
+        "Author":  "Florian Hopfner (@FH-Inway)",
+        "Synopsis":  "Disables throwing of exceptions",
+        "Name":  "Disable-D365Exception",
+        "Links":  null,
+        "Examples":  "-------------------------- EXAMPLE 1 --------------------------\nPS C:\\\u003eDisable-D365Exception\nThis will restore the default behavior of the module to not support throwing exceptions.",
+        "Syntax":  "Disable-D365Exception [\u003cCommonParameters\u003e]"
+    },
+    {
         "CommandName":  "Disable-D365Flight",
         "Description":  "Provides a method for disabling a flight in D365FO.",
         "Tags":  [
@@ -2956,7 +2976,7 @@
                        ],
                        [
                            "LcsApiUri",
-                           "URI / URL to the LCS API you want to use\nDepending on whether your LCS project is located in europe or not, there is 2 valid URI\u0027s / URL\u0027s\nValid options:\r\n\"https://lcsapi.lcs.dynamics.com\"\r\n\"https://lcsapi.eu.lcs.dynamics.com\"\r\n\"https://lcsapi.fr.lcs.dynamics.com\"\r\n\"https://lcsapi.sa.lcs.dynamics.com\"\r\n\"https://lcsapi.uae.lcs.dynamics.com\"\r\n\"https://lcsapi.ch.lcs.dynamics.com\"\r\n\"https://lcsapi.lcs.dynamics.cn\"\r\n\"https://lcsapi.gov.lcs.microsoftdynamics.us\"\nDefault value can be configured using Set-D365LcsApiConfig",
+                           "URI / URL to the LCS API you want to use\nThe value depends on where your LCS project is located. There are multiple valid URI\u0027s / URL\u0027s\nValid options:\r\n\"https://lcsapi.lcs.dynamics.com\"\r\n\"https://lcsapi.eu.lcs.dynamics.com\"\r\n\"https://lcsapi.fr.lcs.dynamics.com\"\r\n\"https://lcsapi.sa.lcs.dynamics.com\"\r\n\"https://lcsapi.uae.lcs.dynamics.com\"\r\n\"https://lcsapi.ch.lcs.dynamics.com\"\r\n\"https://lcsapi.no.lcs.dynamics.com\"\r\n\"https://lcsapi.lcs.dynamics.cn\"\r\n\"https://lcsapi.gov.lcs.microsoftdynamics.us\"\nDefault value can be configured using Set-D365LcsApiConfig",
                            "",
                            false,
                            "false",
@@ -2995,6 +3015,7 @@
                       null,
                       null,
                       null,
+                      null,
                       null
                   ],
         "Examples":  "-------------------------- EXAMPLE 1 --------------------------\nPS C:\\\u003eGet-D365LcsAssetFile -ProjectId 123456789 -FileType SoftwareDeployablePackage -BearerToken \"JldjfafLJdfjlfsalfd...\" -LcsApiUri \"https://lcsapi.lcs.dynamics.com\"\nThis will list all Software Deployable Packages.\r\nThe LCS project is identified by the ProjectId 123456789, which can be obtained in the LCS portal.\r\nThe request will authenticate with the BearerToken \"JldjfafLJdfjlfsalfd...\".\r\nThe http request will be going to the LcsApiUri \"https://lcsapi.lcs.dynamics.com\" (NON-EUROPE).\n-------------------------- EXAMPLE 2 --------------------------\nPS C:\\\u003eGet-D365LcsAssetFile -FileType SoftwareDeployablePackage\nThis will list all Software Deployable Packages.\r\nIt will search for SoftwareDeployablePackage by using the FileType parameter.\nAll default values will come from the configuration available from Get-D365LcsApiConfig.\nThe default values can be configured using Set-D365LcsApiConfig.\n-------------------------- EXAMPLE 3 --------------------------\nPS C:\\\u003eGet-D365LcsAssetFile -FileType SoftwareDeployablePackage -AssetFilename \"*MAIN*\"\nThis will list all Software Deployable Packages, that matches the \"*MAIN*\" search pattern in the AssetFilename.\r\nIt will search for SoftwareDeployablePackage by using the FileType parameter.\r\nIt will filter the output to match the AssetFilename \"*MAIN*\" search pattern.\nAll default values will come from the configuration available from Get-D365LcsApiConfig.\nThe default values can be configured using Set-D365LcsApiConfig.\n-------------------------- EXAMPLE 4 --------------------------\nPS C:\\\u003eGet-D365LcsAssetFile -FileType SoftwareDeployablePackage -AssetName \"*MAIN*\"\nThis will list all Software Deployable Packages, that matches the \"*MAIN*\" search pattern in the AssetName.\r\nIt will search for SoftwareDeployablePackage by using the FileType parameter.\r\nIt will filter the output to match the AssetName \"*MAIN*\" search pattern.\nAll default values will come from the configuration available from Get-D365LcsApiConfig.\nThe default values can be configured using Set-D365LcsApiConfig.\n-------------------------- EXAMPLE 5 --------------------------\nPS C:\\\u003eGet-D365LcsAssetFile -FileType SoftwareDeployablePackage -AssetDescription \"*TEST*\"\nThis will list all Software Deployable Packages, that matches the \"*TEST*\" search pattern in the AssetDescription.\r\nIt will search for SoftwareDeployablePackage by using the FileType parameter.\r\nIt will filter the output to match the AssetDescription \"*TEST*\" search pattern.\nAll default values will come from the configuration available from Get-D365LcsApiConfig.\nThe default values can be configured using Set-D365LcsApiConfig.\n-------------------------- EXAMPLE 6 --------------------------\nPS C:\\\u003eGet-D365LcsAssetFile -FileType SoftwareDeployablePackage -AssetId \"500dd860-eacf-4e04-9f18-f9c8fe1d8e03\"\nThis will list all Software Deployable Packages, that matches the \"500dd860-eacf-4e04-9f18-f9c8fe1d8e03\" search pattern in the AssetId.\r\nIt will search for SoftwareDeployablePackage by using the FileType parameter.\r\nIt will filter the output to match the AssetId \"500dd860-eacf-4e04-9f18-f9c8fe1d8e03\" search pattern.\nAll default values will come from the configuration available from Get-D365LcsApiConfig.\nThe default values can be configured using Set-D365LcsApiConfig.\n-------------------------- EXAMPLE 7 --------------------------\nPS C:\\\u003eGet-D365LcsAssetFile -FileType SoftwareDeployablePackage -Latest | Invoke-D365AzCopyTransfer -DestinationUri C:\\Temp\\d365fo.tools -FileName \"Main.zip\" -ShowOriginalProgress\nThis will download the latest Software Deployable Package from the Asset Library in LCS onto your on machine.\r\nIt will list Software Deployable Packages based on the FileType parameter.\r\nIt will list the latest (newest) Software Deployable Package.\nAll default values will come from the configuration available from Get-D365LcsApiConfig.\nThe default values can be configured using Set-D365LcsApiConfig.\n-------------------------- EXAMPLE 8 --------------------------\nPS C:\\\u003eGet-D365LcsAssetFile -FileType SoftwareDeployablePackage -RetryTimeout \"00:01:00\"\nThis will list all Software Deployable Packages, and allow for the cmdlet to retry for no more than 1 minute.\r\nIt will search for SoftwareDeployablePackage by using the FileType parameter.\nAll default values will come from the configuration available from Get-D365LcsApiConfig.\nThe default values can be configured using Set-D365LcsApiConfig.",
@@ -3030,7 +3051,7 @@
                        ],
                        [
                            "LcsApiUri",
-                           "URI / URL to the LCS API you want to use\nDepending on whether your LCS project is located in europe or not, there is 2 valid URI\u0027s / URL\u0027s\nValid options:\r\n\"https://lcsapi.lcs.dynamics.com\"\r\n\"https://lcsapi.eu.lcs.dynamics.com\"\r\n\"https://lcsapi.fr.lcs.dynamics.com\"\r\n\"https://lcsapi.sa.lcs.dynamics.com\"\r\n\"https://lcsapi.uae.lcs.dynamics.com\"\r\n\"https://lcsapi.ch.lcs.dynamics.com\"\r\n\"https://lcsapi.lcs.dynamics.cn\"\r\n\"https://lcsapi.gov.lcs.microsoftdynamics.us\"\nDefault value can be configured using Set-D365LcsApiConfig",
+                           "URI / URL to the LCS API you want to use\nThe value depends on where your LCS project is located. There are multiple valid URI\u0027s / URL\u0027s\nValid options:\r\n\"https://lcsapi.lcs.dynamics.com\"\r\n\"https://lcsapi.eu.lcs.dynamics.com\"\r\n\"https://lcsapi.fr.lcs.dynamics.com\"\r\n\"https://lcsapi.sa.lcs.dynamics.com\"\r\n\"https://lcsapi.uae.lcs.dynamics.com\"\r\n\"https://lcsapi.ch.lcs.dynamics.com\"\r\n\"https://lcsapi.no.lcs.dynamics.com\"\r\n\"https://lcsapi.lcs.dynamics.cn\"\r\n\"https://lcsapi.gov.lcs.microsoftdynamics.us\"\nDefault value can be configured using Set-D365LcsApiConfig",
                            "",
                            false,
                            "false",
@@ -3107,7 +3128,7 @@
                        ],
                        [
                            "LcsApiUri",
-                           "URI / URL to the LCS API you want to use\nDepending on whether your LCS project is located in europe or not, there is 2 valid URI\u0027s / URL\u0027s\nValid options:\r\n\"https://lcsapi.lcs.dynamics.com\"\r\n\"https://lcsapi.eu.lcs.dynamics.com\"\r\n\"https://lcsapi.fr.lcs.dynamics.com\"\r\n\"https://lcsapi.sa.lcs.dynamics.com\"\r\n\"https://lcsapi.uae.lcs.dynamics.com\"\r\n\"https://lcsapi.ch.lcs.dynamics.com\"\r\n\"https://lcsapi.lcs.dynamics.cn\"\r\n\"https://lcsapi.gov.lcs.microsoftdynamics.us\"\nDefault value can be configured using Set-D365LcsApiConfig",
+                           "URI / URL to the LCS API you want to use\nThe value depends on where your LCS project is located. There are multiple valid URI\u0027s / URL\u0027s\nValid options:\r\n\"https://lcsapi.lcs.dynamics.com\"\r\n\"https://lcsapi.eu.lcs.dynamics.com\"\r\n\"https://lcsapi.fr.lcs.dynamics.com\"\r\n\"https://lcsapi.sa.lcs.dynamics.com\"\r\n\"https://lcsapi.uae.lcs.dynamics.com\"\r\n\"https://lcsapi.ch.lcs.dynamics.com\"\r\n\"https://lcsapi.no.lcs.dynamics.com\"\r\n\"https://lcsapi.lcs.dynamics.cn\"\r\n\"https://lcsapi.gov.lcs.microsoftdynamics.us\"\nDefault value can be configured using Set-D365LcsApiConfig",
                            "",
                            false,
                            "false",
@@ -3200,7 +3221,7 @@
                        ],
                        [
                            "LcsApiUri",
-                           "URI / URL to the LCS API you want to use\nDepending on whether your LCS project is located in europe or not, there is 2 valid URI\u0027s / URL\u0027s\nValid options:\r\n\"https://lcsapi.lcs.dynamics.com\"\r\n\"https://lcsapi.eu.lcs.dynamics.com\"\r\n\"https://lcsapi.fr.lcs.dynamics.com\"\r\n\"https://lcsapi.sa.lcs.dynamics.com\"\r\n\"https://lcsapi.uae.lcs.dynamics.com\"\r\n\"https://lcsapi.ch.lcs.dynamics.com\"\r\n\"https://lcsapi.lcs.dynamics.cn\"\r\n\"https://lcsapi.gov.lcs.microsoftdynamics.us\"\nDefault value can be configured using Set-D365LcsApiConfig",
+                           "URI / URL to the LCS API you want to use\nThe value depends on where your LCS project is located. There are multiple valid URI\u0027s / URL\u0027s\nValid options:\r\n\"https://lcsapi.lcs.dynamics.com\"\r\n\"https://lcsapi.eu.lcs.dynamics.com\"\r\n\"https://lcsapi.fr.lcs.dynamics.com\"\r\n\"https://lcsapi.sa.lcs.dynamics.com\"\r\n\"https://lcsapi.uae.lcs.dynamics.com\"\r\n\"https://lcsapi.ch.lcs.dynamics.com\"\r\n\"https://lcsapi.no.lcs.dynamics.com\"\r\n\"https://lcsapi.lcs.dynamics.cn\"\r\n\"https://lcsapi.gov.lcs.microsoftdynamics.us\"\nDefault value can be configured using Set-D365LcsApiConfig",
                            "",
                            false,
                            "false",
@@ -3306,7 +3327,7 @@
                        ],
                        [
                            "LcsApiUri",
-                           "URI / URL to the LCS API you want to use\nDepending on whether your LCS project is located in europe or not, there is 2 valid URI\u0027s / URL\u0027s\nValid options:\r\n\"https://lcsapi.lcs.dynamics.com\"\r\n\"https://lcsapi.eu.lcs.dynamics.com\"\r\n\"https://lcsapi.fr.lcs.dynamics.com\"\r\n\"https://lcsapi.sa.lcs.dynamics.com\"\r\n\"https://lcsapi.uae.lcs.dynamics.com\"\r\n\"https://lcsapi.ch.lcs.dynamics.com\"\r\n\"https://lcsapi.lcs.dynamics.cn\"\r\n\"https://lcsapi.gov.lcs.microsoftdynamics.us\"\nDefault value can be configured using Set-D365LcsApiConfig",
+                           "URI / URL to the LCS API you want to use\nThe value depends on where your LCS project is located. There are multiple valid URI\u0027s / URL\u0027s\nValid options:\r\n\"https://lcsapi.lcs.dynamics.com\"\r\n\"https://lcsapi.eu.lcs.dynamics.com\"\r\n\"https://lcsapi.fr.lcs.dynamics.com\"\r\n\"https://lcsapi.sa.lcs.dynamics.com\"\r\n\"https://lcsapi.uae.lcs.dynamics.com\"\r\n\"https://lcsapi.ch.lcs.dynamics.com\"\r\n\"https://lcsapi.no.lcs.dynamics.com\"\r\n\"https://lcsapi.lcs.dynamics.cn\"\r\n\"https://lcsapi.gov.lcs.microsoftdynamics.us\"\nDefault value can be configured using Set-D365LcsApiConfig",
                            "",
                            false,
                            "false",
@@ -3415,7 +3436,7 @@
                        ],
                        [
                            "LcsApiUri",
-                           "URI / URL to the LCS API you want to use\nDepending on whether your LCS project is located in europe or not, there is 2 valid URI\u0027s / URL\u0027s\nValid options:\r\n\"https://lcsapi.lcs.dynamics.com\"\r\n\"https://lcsapi.eu.lcs.dynamics.com\"\r\n\"https://lcsapi.fr.lcs.dynamics.com\"\r\n\"https://lcsapi.sa.lcs.dynamics.com\"\r\n\"https://lcsapi.uae.lcs.dynamics.com\"\r\n\"https://lcsapi.ch.lcs.dynamics.com\"\r\n\"https://lcsapi.lcs.dynamics.cn\"\r\n\"https://lcsapi.gov.lcs.microsoftdynamics.us\"\nDefault value can be configured using Set-D365LcsApiConfig",
+                           "URI / URL to the LCS API you want to use\nThe value depends on where your LCS project is located. There are multiple valid URI\u0027s / URL\u0027s\nValid options:\r\n\"https://lcsapi.lcs.dynamics.com\"\r\n\"https://lcsapi.eu.lcs.dynamics.com\"\r\n\"https://lcsapi.fr.lcs.dynamics.com\"\r\n\"https://lcsapi.sa.lcs.dynamics.com\"\r\n\"https://lcsapi.uae.lcs.dynamics.com\"\r\n\"https://lcsapi.ch.lcs.dynamics.com\"\r\n\"https://lcsapi.no.lcs.dynamics.com\"\r\n\"https://lcsapi.lcs.dynamics.cn\"\r\n\"https://lcsapi.gov.lcs.microsoftdynamics.us\"\nDefault value can be configured using Set-D365LcsApiConfig",
                            "",
                            false,
                            "false",
@@ -3508,7 +3529,7 @@
                        ],
                        [
                            "LcsApiUri",
-                           "URI / URL to the LCS API you want to use\nDepending on whether your LCS project is located in europe or not, there is 2 valid URI\u0027s / URL\u0027s\nValid options:\r\n\"https://lcsapi.lcs.dynamics.com\"\r\n\"https://lcsapi.eu.lcs.dynamics.com\"\r\n\"https://lcsapi.fr.lcs.dynamics.com\"\r\n\"https://lcsapi.sa.lcs.dynamics.com\"\r\n\"https://lcsapi.uae.lcs.dynamics.com\"\r\n\"https://lcsapi.ch.lcs.dynamics.com\"\r\n\"https://lcsapi.lcs.dynamics.cn\"\r\n\"https://lcsapi.gov.lcs.microsoftdynamics.us\"\nDefault value can be configured using Set-D365LcsApiConfig",
+                           "URI / URL to the LCS API you want to use\nThe value depends on where your LCS project is located. There are multiple valid URI\u0027s / URL\u0027s\nValid options:\r\n\"https://lcsapi.lcs.dynamics.com\"\r\n\"https://lcsapi.eu.lcs.dynamics.com\"\r\n\"https://lcsapi.fr.lcs.dynamics.com\"\r\n\"https://lcsapi.sa.lcs.dynamics.com\"\r\n\"https://lcsapi.uae.lcs.dynamics.com\"\r\n\"https://lcsapi.ch.lcs.dynamics.com\"\r\n\"https://lcsapi.no.lcs.dynamics.com\"\r\n\"https://lcsapi.lcs.dynamics.cn\"\r\n\"https://lcsapi.gov.lcs.microsoftdynamics.us\"\nDefault value can be configured using Set-D365LcsApiConfig",
                            "",
                            false,
                            "false",
@@ -3546,6 +3567,121 @@
         "Links":  null,
         "Examples":  "-------------------------- EXAMPLE 1 --------------------------\nPS C:\\\u003eGet-D365LcsEnvironmentMetadata -ProjectId \"123456789\"\nThis will show metadata for every available environment from the LCS project.\r\nThe LCS project is identified by the ProjectId 123456789, which can be obtained in the LCS portal.\nThe request time for completion is directly impacted by the number of environments within the LCS project.\r\nPlease be patient and let the system work for you.\nYou might experience that not all environments are listed with this request, that would indicate that the LCS project has many environments. Please use the -TraverseAllPages parameter to ensure that \r\nall environments are outputted.\nA result set example (Tier1):\nEnvironmentId                  : c6566087-23bd-4561-8247-4d7f4efd3172\r\nEnvironmentName                : DevBox-01\r\nProjectId                      : 123456789\r\nEnvironmentInfrastructure      : CustomerManaged\r\nEnvironmentType                : DevTestDev\r\nEnvironmentGroup               : Primary\r\nEnvironmentProduct             : Finance and Operations\r\nEnvironmentEndpointBaseUrl     : https://devbox-4d7f4efd3172devaos.cloudax.dynamics.com/\r\nDeploymentState                : Stopped\r\nTopologyDisplayName            : Finance and Operations - Develop (10.0.18 with Platform update 42)\r\nCurrentApplicationBuildVersion : 10.0.793.41\r\nCurrentApplicationReleaseName  : 10.0.18\r\nCurrentPlatformReleaseName     : Update42\r\nCurrentPlatformVersion         : 7.0.5968.16999\r\nDeployedOnUTC                  : 7/5/2021 11:19 AM\r\nCloudStorageLocation           : West Europe\r\nDisasterRecoveryLocation       : North Europe\r\nDeploymentStatusDisplay        : Stopped\r\nCanStart                       : True\r\nCanStop                        : False\nA result set example (Tier2+):\nEnvironmentId                  : e7c53b85-8b6a-4ab9-8985-1e1ea89a0f0a\r\nEnvironmentName                : Contoso-SIT\r\nProjectId                      : 123456789\r\nEnvironmentInfrastructure      : SelfService\r\nEnvironmentType                : Sandbox\r\nEnvironmentGroup               : Primary\r\nEnvironmentProduct             : Finance and Operations\r\nEnvironmentEndpointBaseUrl     : https://Contoso-SIT.sandbox.operations.dynamics.com/\r\nDeploymentState                : Finished\r\nTopologyDisplayName            : AXHA\r\nCurrentApplicationBuildVersion : 10.0.761.10019\r\nCurrentApplicationReleaseName  : 10.0.17\r\nCurrentPlatformReleaseName     : PU41\r\nCurrentPlatformVersion         : 7.0.5934.35741\r\nDeployedOnUTC                  : 4/1/2020 9:35 PM\r\nCloudStorageLocation           : West Europe\r\nDisasterRecoveryLocation       :\r\nDeploymentStatusDisplay        : Deployed\r\nCanStart                       : False\r\nCanStop                        : False\nA result set example (PROD):\nEnvironmentId                  : a8aab4f4-d4f3-41f0-af80-54cea83b50d2\r\nEnvironmentName                : Contoso-PROD\r\nProjectId                      : 123456789\r\nEnvironmentInfrastructure      : SelfService\r\nEnvironmentType                : Production\r\nEnvironmentGroup               : Primary\r\nEnvironmentProduct             : Finance and Operations\r\nEnvironmentEndpointBaseUrl     : https://Contoso-PROD.operations.dynamics.com/\r\nDeploymentState                : Finished\r\nTopologyDisplayName            : AXHA\r\nCurrentApplicationBuildVersion : 10.0.886.48\r\nCurrentApplicationReleaseName  : 10.0.20\r\nCurrentPlatformReleaseName     : PU44\r\nCurrentPlatformVersion         : 7.0.6060.45\r\nDeployedOnUTC                  : 4/9/2020 12:11 PM\r\nCloudStorageLocation           : West Europe\r\nDisasterRecoveryLocation       :\r\nDeploymentStatusDisplay        : Deployed\r\nCanStart                       : False\r\nCanStop                        : False\n-------------------------- EXAMPLE 2 --------------------------\nPS C:\\\u003eGet-D365LcsEnvironmentMetadata -ProjectId \"123456789\" -TraverseAllPages\nThis will show metadata for every available environment from the LCS project, across multiple pages.\r\nThe LCS project is identified by the ProjectId 123456789, which can be obtained in the LCS portal.\r\nIt will use the default value for the maximum number of pages to return, 99 pages.\nTraverseAllPages will increase the request time for completion, based on how many entries there is in the history.\r\nPlease be patient and let the system work for you.\nPlease note that when fetching more than 6-7 pages, you will start hitting the 429 throttling from the LCS API endpoint\n-------------------------- EXAMPLE 3 --------------------------\nPS C:\\\u003eGet-D365LcsEnvironmentMetadata -ProjectId \"123456789\" -EnvironmentId \"13cc7700-c13b-4ea3-81cd-2d26fa72ec5e\"\nThis will show metadata for every available environment from the LCS project.\r\nThe LCS project is identified by the ProjectId 123456789, which can be obtained in the LCS portal.\r\nThe environment is identified by the EnvironmentId \"13cc7700-c13b-4ea3-81cd-2d26fa72ec5e\", which can be obtained in the LCS portal.\n-------------------------- EXAMPLE 4 --------------------------\nPS C:\\\u003eGet-D365LcsEnvironmentMetadata -ProjectId \"123456789\" -EnvironmentName \"Contoso-SIT\"\nThis will show metadata for every available environment from the LCS project.\r\nThe LCS project is identified by the ProjectId 123456789, which can be obtained in the LCS portal.\r\nThe environment is identified by the EnvironmentName \"Contoso-SIT\", which can be obtained in the LCS portal.\n-------------------------- EXAMPLE 5 --------------------------\nPS C:\\\u003eGet-D365LcsEnvironmentMetadata -ProjectId \"123456789\" -TraverseAllPages -FirstPages 2\nThis will show metadata for every available environment from the LCS project, across multiple pages.\r\nThe LCS project is identified by the ProjectId 123456789, which can be obtained in the LCS portal.\r\nIt will use the default value for the maximum number of pages to return, 99 pages.\r\nThe cmdlet will be fetching the FirstPages 2, to limit the output from the cmdlet to only the newest 2 pages.\nTraverseAllPages will increase the request time for completion, based on how many entries there is in the history.\r\nPlease be patient and let the system work for you.\nPlease note that when fetching more than 6-7 pages, you will start hitting the 429 throttling from the LCS API endpoint",
         "Syntax":  "Get-D365LcsEnvironmentMetadata [-ProjectId \u003cInt32\u003e] [-BearerToken \u003cString\u003e] [-LcsApiUri \u003cString\u003e] [-FailOnErrorMessage] [-RetryTimeout \u003cTimeSpan\u003e] [-EnableException] [\u003cCommonParameters\u003e]\nGet-D365LcsEnvironmentMetadata [-ProjectId \u003cInt32\u003e] [-BearerToken \u003cString\u003e] [-EnvironmentId \u003cString\u003e] [-LcsApiUri \u003cString\u003e] [-FailOnErrorMessage] [-RetryTimeout \u003cTimeSpan\u003e] [-EnableException] [\u003cCommonParameters\u003e]\nGet-D365LcsEnvironmentMetadata [-ProjectId \u003cInt32\u003e] [-BearerToken \u003cString\u003e] [-EnvironmentName \u003cString\u003e] [-LcsApiUri \u003cString\u003e] [-FailOnErrorMessage] [-RetryTimeout \u003cTimeSpan\u003e] [-EnableException] [\u003cCommonParameters\u003e]\nGet-D365LcsEnvironmentMetadata [-ProjectId \u003cInt32\u003e] [-BearerToken \u003cString\u003e] [-TraverseAllPages] [-FirstPages \u003cInt32\u003e] [-LcsApiUri \u003cString\u003e] [-FailOnErrorMessage] [-RetryTimeout \u003cTimeSpan\u003e] [-EnableException] [\u003cCommonParameters\u003e]"
+    },
+    {
+        "CommandName":  "Get-D365LcsSharedAssetFile",
+        "Description":  "Get the information for the file assets from the shared asset library of LCS matching the search criteria",
+        "Params":  [
+                       [
+                           "ProjectId",
+                           "The project id for the Dynamics 365 for Finance \u0026 Operations project inside LCS\nDefault value can be configured using Set-D365LcsApiConfig\nAlthough the assets are stored in the shared asset library, their information is retrieved in context of a project to get the full information.",
+                           "",
+                           false,
+                           "false",
+                           "$Script:LcsApiProjectId"
+                       ],
+                       [
+                           "FileType",
+                           "Type of file you want to list from the LCS Asset Library\nValid options:\r\n\"Model\"\r\n\"Process Data Package\"\r\n\"Software Deployable Package\"\r\n\"GER Configuration\"\r\n\"Data Package\"\r\n\"PowerBI Report Model\"\r\n\"E-Commerce Package\"\r\n\"NuGet Package\"\r\n\"Retail Self-Service Package\"\r\n\"Commerce Cloud Scale Unit Extension\"\nDefault value is \"Software Deployable Package\"",
+                           "",
+                           false,
+                           "false",
+                           "SoftwareDeployablePackage"
+                       ],
+                       [
+                           "AssetName",
+                           "Name of the asset that you are looking for\nAccepts wildcards for searching. E.g. -AssetName \"*ISV*\"\nDefault value is \"*\" which will search for all assets via the Name property",
+                           "",
+                           false,
+                           "false",
+                           "*"
+                       ],
+                       [
+                           "AssetVersion",
+                           "Version of the Asset file that you are looking for\nIt does a simple compare against the response from LCS and only lists the ones that matches\nAccepts wildcards for searching. E.g. -AssetVersion \"*ISV*\"\nDefault value is \"*\" which will search for all files",
+                           "",
+                           false,
+                           "false",
+                           "*"
+                       ],
+                       [
+                           "AssetFilename",
+                           "Name of the file that you are looking for\nAccepts wildcards for searching. E.g. -AssetFilename \"*ISV*\"\nDefault value is \"*\" which will search for all files via the FileName property",
+                           "",
+                           false,
+                           "false",
+                           "*"
+                       ],
+                       [
+                           "AssetDescription",
+                           "Name of the file that you are looking for\nAccepts wildcards for searching. E.g. -AssetDescription \"*ISV*\"\nDefault value is \"*\" which will search for all files via the FileDescription property",
+                           "",
+                           false,
+                           "false",
+                           "*"
+                       ],
+                       [
+                           "AssetId",
+                           "Id of the file that you are looking for\nAccepts wildcards for searching. E.g. -AssetId \"*ISV*\"\nDefault value is \"*\" which will search for all files via the AssetId property",
+                           "",
+                           false,
+                           "false",
+                           "*"
+                       ],
+                       [
+                           "BearerToken",
+                           "The token you want to use when working against the LCS api\nDefault value can be configured using Set-D365LcsApiConfig",
+                           "Token",
+                           false,
+                           "false",
+                           "$Script:LcsApiBearerToken"
+                       ],
+                       [
+                           "LcsApiUri",
+                           "URI / URL to the LCS API you want to use\nThe value depends on where your LCS project is located. There are multiple valid URI\u0027s / URL\u0027s\nValid options:\r\n\"https://lcsapi.lcs.dynamics.com\"\r\n\"https://lcsapi.eu.lcs.dynamics.com\"\r\n\"https://lcsapi.fr.lcs.dynamics.com\"\r\n\"https://lcsapi.sa.lcs.dynamics.com\"\r\n\"https://lcsapi.uae.lcs.dynamics.com\"\r\n\"https://lcsapi.ch.lcs.dynamics.com\"\r\n\"https://lcsapi.no.lcs.dynamics.com\"\r\n\"https://lcsapi.lcs.dynamics.cn\"\r\n\"https://lcsapi.gov.lcs.microsoftdynamics.us\"\nDefault value can be configured using Set-D365LcsApiConfig",
+                           "",
+                           false,
+                           "false",
+                           "$Script:LcsApiLcsApiUri"
+                       ],
+                       [
+                           "Latest",
+                           "Instruct the cmdlet to only fetch the latest file from the Asset Library from LCS",
+                           "GetLatest",
+                           false,
+                           "false",
+                           "False"
+                       ],
+                       [
+                           "RetryTimeout",
+                           "The retry timeout, before the cmdlet should quit retrying based on the 429 status code\nNeeds to be provided in the timspan notation:\r\n\"hh:mm:ss\"\nhh is the number of hours, numerical notation only\r\nmm is the number of minutes\r\nss is the numbers of seconds\nEach section of the timeout has to valid, e.g.\r\nhh can maximum be 23\r\nmm can maximum be 59\r\nss can maximum be 59\nNot setting this parameter will result in the cmdlet to try for ever to handle the 429 push back from the endpoint",
+                           "",
+                           false,
+                           "false",
+                           "00:00:00"
+                       ],
+                       [
+                           "EnableException",
+                           "This parameters disables user-friendly warnings and enables the throwing of exceptions\r\nThis is less user friendly, but allows catching exceptions in calling scripts\r\nUsually this parameter is not used directly, but via the Enable-D365Exception cmdlet\r\nSee https://github.com/d365collaborative/d365fo.tools/wiki/Exception-handling#what-does-the--enableexception-parameter-do for further information",
+                           "",
+                           false,
+                           "false",
+                           "False"
+                       ]
+                   ],
+        "Alias":  "",
+        "Author":  "Florian Hopfner (@FH-Inway)",
+        "Synopsis":  "Get information for assets from the shared asset library of LCS",
+        "Name":  "Get-D365LcsSharedAssetFile",
+        "Links":  [
+                      null,
+                      null,
+                      null,
+                      null,
+                      null
+                  ],
+        "Examples":  "-------------------------- EXAMPLE 1 --------------------------\nPS C:\\\u003eGet-D365LcsSharedAssetFile -ProjectId 123456789 -FileType SoftwareDeployablePackage -BearerToken \"JldjfafLJdfjlfsalfd...\" -LcsApiUri \"https://lcsapi.lcs.dynamics.com\"\nThis will list all Software Deployable Packages in the shared asset library.\r\nThe LCS project is identified by the ProjectId 123456789, which can be obtained in the LCS portal.\r\nThe request will authenticate with the BearerToken \"JldjfafLJdfjlfsalfd...\".\r\nThe http request will be going to the LcsApiUri \"https://lcsapi.lcs.dynamics.com\" (NON-EUROPE).\n-------------------------- EXAMPLE 2 --------------------------\nPS C:\\\u003eGet-D365LcsSharedAssetFile -FileType SoftwareDeployablePackage\nThis will list all Software Deployable Packages in the shared asset library.\r\nIt will search for SoftwareDeployablePackage by using the FileType parameter.\nAll default values will come from the configuration available from Get-D365LcsApiConfig.\nThe default values can be configured using Set-D365LcsApiConfig.\n-------------------------- EXAMPLE 3 --------------------------\nPS C:\\\u003eGet-D365LcsAssetFile -FileType SoftwareDeployablePackage -AssetFilename \"*MAIN*\"\nThis will list all Software Deployable Packages in the shared asset library that match the \"*MAIN*\" search pattern in the file name of the asset.\r\nIt will search for SoftwareDeployablePackage by using the FileType parameter.\r\nIt will filter the output to match the AssetFilename \"*MAIN*\" search pattern.\nAll default values will come from the configuration available from Get-D365LcsApiConfig.\nThe default values can be configured using Set-D365LcsApiConfig.\n-------------------------- EXAMPLE 4 --------------------------\nPS C:\\\u003eGet-D365LcsAssetFile -FileType SoftwareDeployablePackage -AssetName \"*MAIN*\"\nThis will list all Software Deployable Packages in the shared asset library that match the \"*MAIN*\" search pattern in the name of the asset.\r\nIt will search for SoftwareDeployablePackage by using the FileType parameter.\r\nIt will filter the output to match the AssetName \"*MAIN*\" search pattern.\nAll default values will come from the configuration available from Get-D365LcsApiConfig.\nThe default values can be configured using Set-D365LcsApiConfig.\n-------------------------- EXAMPLE 5 --------------------------\nPS C:\\\u003eGet-D365LcsAssetFile -FileType SoftwareDeployablePackage -AssetDescription \"*TEST*\"\nThis will list all Software Deployable Packages in the shared asset library that match the \"*TEST*\" search pattern in the asset description.\r\nIt will search for SoftwareDeployablePackage by using the FileType parameter.\r\nIt will filter the output to match the AssetDescription \"*TEST*\" search pattern.\nAll default values will come from the configuration available from Get-D365LcsApiConfig.\nThe default values can be configured using Set-D365LcsApiConfig.\n-------------------------- EXAMPLE 6 --------------------------\nPS C:\\\u003eGet-D365LcsAssetFile -FileType SoftwareDeployablePackage -AssetId \"500dd860-eacf-4e04-9f18-f9c8fe1d8e03\"\nThis will list all Software Deployable Packages in the shared asset library that match the \"500dd860-eacf-4e04-9f18-f9c8fe1d8e03\" search pattern in the asset id.\r\nIt will search for SoftwareDeployablePackage by using the FileType parameter.\r\nIt will filter the output to match the AssetId \"500dd860-eacf-4e04-9f18-f9c8fe1d8e03\" search pattern.\nAll default values will come from the configuration available from Get-D365LcsApiConfig.\nThe default values can be configured using Set-D365LcsApiConfig.\n-------------------------- EXAMPLE 7 --------------------------\nPS C:\\\u003e$asset = Get-D365LcsSharedAssetFile -FileType SoftwareDeployablePackage -Latest\nPS C:\\\u003e Invoke-D365AzCopyTransfer -SourceUri $asset.FileLocation -DestinationUri C:\\Temp\\d365fo.tools\\$($asset.Filename) -ShowOriginalProgress\nThis will download the latest Software Deployable Package from the shared asset library in LCS onto your local machine.\r\nIt will list Software Deployable Packages based on the FileType parameter.\r\nIt will list the latest (newest) Software Deployable Package.\nAll default values will come from the configuration available from Get-D365LcsApiConfig.\nThe default values can be configured using Set-D365LcsApiConfig.\n-------------------------- EXAMPLE 8 --------------------------\nPS C:\\\u003eGet-D365LcsSharedAssetFile -FileType SoftwareDeployablePackage -RetryTimeout \"00:01:00\"\nThis will list all Software Deployable Packages in the shared asset library and allow for the cmdlet to retry for no more than 1 minute.\r\nIt will search for SoftwareDeployablePackage by using the FileType parameter.\nAll default values will come from the configuration available from Get-D365LcsApiConfig.\nThe default values can be configured using Set-D365LcsApiConfig.",
+        "Syntax":  "Get-D365LcsSharedAssetFile [[-ProjectId] \u003cInt32\u003e] [[-FileType] {Model | ProcessDataPackage | SoftwareDeployablePackage | GERConfiguration | DataPackage | PowerBIReportModel | ECommercePackage | NuGetPackage | RetailSelfServicePackage | CommerceCloudScaleUnitExtension}] [[-AssetName] \u003cString\u003e] [[-AssetVersion] \u003cString\u003e] [[-AssetFilename] \u003cString\u003e] [[-AssetDescription] \u003cString\u003e] [[-AssetId] \u003cString\u003e] [[-BearerToken] \u003cString\u003e] [[-LcsApiUri] \u003cString\u003e] [-Latest] [[-RetryTimeout] \u003cTimeSpan\u003e] [-EnableException] [\u003cCommonParameters\u003e]"
     },
     {
         "CommandName":  "Get-D365MaintenanceMode",
@@ -3708,6 +3844,14 @@
                            "False"
                        ],
                        [
+                           "InDependencyOrder",
+                           "Instructs the cmdlet to return modules in dependency order, starting with modules\r\nwith no references to other modules.",
+                           "Dependency",
+                           false,
+                           "false",
+                           "False"
+                       ],
+                       [
                            "BinDir",
                            "The path to the bin directory for the environment\nDefault path is the same as the AOS service PackagesLocalDirectory\\bin\nDefault value is fetched from the current configuration on the machine",
                            "",
@@ -3729,8 +3873,8 @@
         "Synopsis":  "Get installed package / module from Dynamics 365 Finance \u0026 Operations environment",
         "Name":  "Get-D365Module",
         "Links":  null,
-        "Examples":  "-------------------------- EXAMPLE 1 --------------------------\nPS C:\\\u003eGet-D365Module\nShows the entire list of installed packages / modules located in the default location on the machine.\nA result set example:\nModuleName                               IsBinary Version         References\r\n----------                               -------- -------         ----------\r\nAccountsPayableMobile                    False    10.0.9107.14827 {ApplicationFoundation, ApplicationPlatform, Appli...\r\nApplicationCommon                        False    10.0.8008.26462 {ApplicationFoundation, ApplicationPlatform}\r\nApplicationFoundation                    False    7.0.5493.35504  {ApplicationPlatform}\r\nApplicationFoundationFormAdaptor         False    7.0.4841.35227  {ApplicationPlatform, ApplicationFoundation, TestE...\r\nCustom                                   True     10.0.0.0        {ApplicationPlatform}\n-------------------------- EXAMPLE 2 --------------------------\nPS C:\\\u003eGet-D365Module -ExcludeBinaryModules\nOutputs the all packages / modules that are NOT binary.\r\nWill only include modules that is IsBinary = \"False\".\nA result set example:\nModuleName                               IsBinary Version         References\r\n----------                               -------- -------         ----------\r\nAccountsPayableMobile                    False    10.0.9107.14827 {ApplicationFoundation, ApplicationPlatform, Appli...\r\nApplicationCommon                        False    10.0.8008.26462 {ApplicationFoundation, ApplicationPlatform}\r\nApplicationFoundation                    False    7.0.5493.35504  {ApplicationPlatform}\r\nApplicationFoundationFormAdaptor         False    7.0.4841.35227  {ApplicationPlatform, ApplicationFoundation, TestE...\n-------------------------- EXAMPLE 3 --------------------------\nPS C:\\\u003eGet-D365Module -Name \"Application*Adaptor\"\nShows the list of installed packages / modules where the name fits the search \"Application*Adaptor\".\nA result set example:\nModuleName                               IsBinary Version         References\r\n----------                               -------- -------         ----------\r\nApplicationFoundationFormAdaptor         False    7.0.4841.35227  {ApplicationPlatform, ApplicationFoundation, TestE...\r\nApplicationPlatformFormAdaptor           False    7.0.4841.35227  {ApplicationPlatform, TestEssentials}\r\nApplicationSuiteFormAdaptor              False    10.0.9107.14827 {ApplicationFoundation, ApplicationPlatform, Appli...\r\nApplicationWorkspacesFormAdaptor         False    10.0.9107.14827 {ApplicationFoundation, ApplicationPlatform, Appli...",
-        "Syntax":  "Get-D365Module [[-Name] \u003cString\u003e] [-ExcludeBinaryModules] [[-BinDir] \u003cString\u003e] [[-PackageDirectory] \u003cString\u003e] [\u003cCommonParameters\u003e]"
+        "Examples":  "-------------------------- EXAMPLE 1 --------------------------\nPS C:\\\u003eGet-D365Module\nShows the entire list of installed packages / modules located in the default location on the machine.\nA result set example:\nModuleName                               IsBinary Version         References\r\n----------                               -------- -------         ----------\r\nAccountsPayableMobile                    False    10.0.9107.14827 {ApplicationFoundation, ApplicationPlatform, Appli...\r\nApplicationCommon                        False    10.0.8008.26462 {ApplicationFoundation, ApplicationPlatform}\r\nApplicationFoundation                    False    7.0.5493.35504  {ApplicationPlatform}\r\nApplicationFoundationFormAdaptor         False    7.0.4841.35227  {ApplicationPlatform, ApplicationFoundation, TestE...\r\nCustom                                   True     10.0.0.0        {ApplicationPlatform}\n-------------------------- EXAMPLE 2 --------------------------\nPS C:\\\u003eGet-D365Module -ExcludeBinaryModules\nOutputs the all packages / modules that are NOT binary.\r\nWill only include modules that is IsBinary = \"False\".\nA result set example:\nModuleName                               IsBinary Version         References\r\n----------                               -------- -------         ----------\r\nAccountsPayableMobile                    False    10.0.9107.14827 {ApplicationFoundation, ApplicationPlatform, Appli...\r\nApplicationCommon                        False    10.0.8008.26462 {ApplicationFoundation, ApplicationPlatform}\r\nApplicationFoundation                    False    7.0.5493.35504  {ApplicationPlatform}\r\nApplicationFoundationFormAdaptor         False    7.0.4841.35227  {ApplicationPlatform, ApplicationFoundation, TestE...\n-------------------------- EXAMPLE 3 --------------------------\nPS C:\\\u003eGet-D365Module -InDependencyOrder\nReturn packages / modules in dependency order, starting with modules with no references to other modules.\nA result set example:\nModuleName                               IsBinary Version         References\r\n----------                               -------- -------         ----------\r\nApplicationPlatform                      False    7.0.0.0         {}\r\nApplicationFoundation                    False    7.0.0.0         {ApplicationPlatform}\r\nApplicationCommon                        False    10.21.36.8818   {ApplicationFoundation, ApplicationPlatform}\r\nAppTroubleshootingCore                   False    10.21.1136.2... {ApplicationCommon, ApplicationFoundation, Applica...\n-------------------------- EXAMPLE 4 --------------------------\nPS C:\\\u003eGet-D365Module -Name \"Application*Adaptor\"\nShows the list of installed packages / modules where the name fits the search \"Application*Adaptor\".\nA result set example:\nModuleName                               IsBinary Version         References\r\n----------                               -------- -------         ----------\r\nApplicationFoundationFormAdaptor         False    7.0.4841.35227  {ApplicationPlatform, ApplicationFoundation, TestE...\r\nApplicationPlatformFormAdaptor           False    7.0.4841.35227  {ApplicationPlatform, TestEssentials}\r\nApplicationSuiteFormAdaptor              False    10.0.9107.14827 {ApplicationFoundation, ApplicationPlatform, Appli...\r\nApplicationWorkspacesFormAdaptor         False    10.0.9107.14827 {ApplicationFoundation, ApplicationPlatform, Appli...",
+        "Syntax":  "Get-D365Module [[-Name] \u003cString\u003e] [-ExcludeBinaryModules] [-InDependencyOrder] [[-BinDir] \u003cString\u003e] [[-PackageDirectory] \u003cString\u003e] [\u003cCommonParameters\u003e]"
     },
     {
         "CommandName":  "Get-D365OfflineAuthenticationAdminEmail",
@@ -7352,7 +7496,7 @@
                        ],
                        [
                            "LcsApiUri",
-                           "URI / URL to the LCS API you want to use\nDepending on whether your LCS project is located in europe or not, there is 2 valid URI\u0027s / URL\u0027s\nValid options:\r\n\"https://lcsapi.lcs.dynamics.com\"\r\n\"https://lcsapi.eu.lcs.dynamics.com\"\r\n\"https://lcsapi.fr.lcs.dynamics.com\"\r\n\"https://lcsapi.sa.lcs.dynamics.com\"\r\n\"https://lcsapi.uae.lcs.dynamics.com\"\r\n\"https://lcsapi.ch.lcs.dynamics.com\"\r\n\"https://lcsapi.lcs.dynamics.cn\"\r\n\"https://lcsapi.gov.lcs.microsoftdynamics.us\"\nDefault value can be configured using Set-D365LcsApiConfig",
+                           "URI / URL to the LCS API you want to use\nThe value depends on where your LCS project is located. There are multiple valid URI\u0027s / URL\u0027s\nValid options:\r\n\"https://lcsapi.lcs.dynamics.com\"\r\n\"https://lcsapi.eu.lcs.dynamics.com\"\r\n\"https://lcsapi.fr.lcs.dynamics.com\"\r\n\"https://lcsapi.sa.lcs.dynamics.com\"\r\n\"https://lcsapi.uae.lcs.dynamics.com\"\r\n\"https://lcsapi.ch.lcs.dynamics.com\"\r\n\"https://lcsapi.no.lcs.dynamics.com\"\r\n\"https://lcsapi.lcs.dynamics.cn\"\r\n\"https://lcsapi.gov.lcs.microsoftdynamics.us\"\nDefault value can be configured using Set-D365LcsApiConfig",
                            "",
                            false,
                            "false",
@@ -7457,7 +7601,7 @@
                        ],
                        [
                            "LcsApiUri",
-                           "URI / URL to the LCS API you want to use\nDepending on whether your LCS project is located in europe or not, there is 2 valid URI\u0027s / URL\u0027s\nValid options:\r\n\"https://lcsapi.lcs.dynamics.com\"\r\n\"https://lcsapi.eu.lcs.dynamics.com\"\r\n\"https://lcsapi.fr.lcs.dynamics.com\"\r\n\"https://lcsapi.sa.lcs.dynamics.com\"\r\n\"https://lcsapi.uae.lcs.dynamics.com\"\r\n\"https://lcsapi.ch.lcs.dynamics.com\"\r\n\"https://lcsapi.lcs.dynamics.cn\"\r\n\"https://lcsapi.gov.lcs.microsoftdynamics.us\"\nDefault value can be configured using Set-D365LcsApiConfig",
+                           "URI / URL to the LCS API you want to use\nThe value depends on where your LCS project is located. There are multiple valid URI\u0027s / URL\u0027s\nValid options:\r\n\"https://lcsapi.lcs.dynamics.com\"\r\n\"https://lcsapi.eu.lcs.dynamics.com\"\r\n\"https://lcsapi.fr.lcs.dynamics.com\"\r\n\"https://lcsapi.sa.lcs.dynamics.com\"\r\n\"https://lcsapi.uae.lcs.dynamics.com\"\r\n\"https://lcsapi.ch.lcs.dynamics.com\"\r\n\"https://lcsapi.no.lcs.dynamics.com\"\r\n\"https://lcsapi.lcs.dynamics.cn\"\r\n\"https://lcsapi.gov.lcs.microsoftdynamics.us\"\nDefault value can be configured using Set-D365LcsApiConfig",
                            "",
                            false,
                            "false",
@@ -7571,7 +7715,7 @@
                        ],
                        [
                            "LcsApiUri",
-                           "URI / URL to the LCS API you want to use\nDepending on whether your LCS project is located in europe or not, there is 2 valid URI\u0027s / URL\u0027s\nValid options:\r\n\"https://lcsapi.lcs.dynamics.com\"\r\n\"https://lcsapi.eu.lcs.dynamics.com\"\r\n\"https://lcsapi.fr.lcs.dynamics.com\"\r\n\"https://lcsapi.sa.lcs.dynamics.com\"\r\n\"https://lcsapi.uae.lcs.dynamics.com\"\r\n\"https://lcsapi.ch.lcs.dynamics.com\"\r\n\"https://lcsapi.lcs.dynamics.cn\"\r\n\"https://lcsapi.gov.lcs.microsoftdynamics.us\"\nDefault value can be configured using Set-D365LcsApiConfig",
+                           "URI / URL to the LCS API you want to use\nThe value depends on where your LCS project is located. There are multiple valid URI\u0027s / URL\u0027s\nValid options:\r\n\"https://lcsapi.lcs.dynamics.com\"\r\n\"https://lcsapi.eu.lcs.dynamics.com\"\r\n\"https://lcsapi.fr.lcs.dynamics.com\"\r\n\"https://lcsapi.sa.lcs.dynamics.com\"\r\n\"https://lcsapi.uae.lcs.dynamics.com\"\r\n\"https://lcsapi.ch.lcs.dynamics.com\"\r\n\"https://lcsapi.no.lcs.dynamics.com\"\r\n\"https://lcsapi.lcs.dynamics.cn\"\r\n\"https://lcsapi.gov.lcs.microsoftdynamics.us\"\nDefault value can be configured using Set-D365LcsApiConfig",
                            "",
                            false,
                            "false",
@@ -7656,7 +7800,7 @@
                        ],
                        [
                            "LcsApiUri",
-                           "URI / URL to the LCS API you want to use\nDepending where your LCS project is located, there are several valid URI\u0027s / URL\u0027s\nValid options:\r\n\"https://lcsapi.lcs.dynamics.com\"\r\n\"https://lcsapi.eu.lcs.dynamics.com\"\r\n\"https://lcsapi.fr.lcs.dynamics.com\"\r\n\"https://lcsapi.sa.lcs.dynamics.com\"\r\n\"https://lcsapi.uae.lcs.dynamics.com\"\r\n\"https://lcsapi.ch.lcs.dynamics.com\"\r\n\"https://lcsapi.lcs.dynamics.cn\"\r\n\"https://lcsapi.gov.lcs.microsoftdynamics.us\"\nDefault value can be configured using Set-D365LcsApiConfig",
+                           "URI / URL to the LCS API you want to use\nThe value depends on where your LCS project is located. There are multiple valid URI\u0027s / URL\u0027s\nValid options:\r\n\"https://lcsapi.lcs.dynamics.com\"\r\n\"https://lcsapi.eu.lcs.dynamics.com\"\r\n\"https://lcsapi.fr.lcs.dynamics.com\"\r\n\"https://lcsapi.sa.lcs.dynamics.com\"\r\n\"https://lcsapi.uae.lcs.dynamics.com\"\r\n\"https://lcsapi.ch.lcs.dynamics.com\"\r\n\"https://lcsapi.no.lcs.dynamics.com\"\r\n\"https://lcsapi.lcs.dynamics.cn\"\r\n\"https://lcsapi.gov.lcs.microsoftdynamics.us\"\nDefault value can be configured using Set-D365LcsApiConfig",
                            "",
                            false,
                            "false",
@@ -7739,7 +7883,7 @@
                        ],
                        [
                            "LcsApiUri",
-                           "URI / URL to the LCS API you want to use\nDepending where your LCS project is located, there are several valid URI\u0027s / URL\u0027s\nValid options:\r\n\"https://lcsapi.lcs.dynamics.com\"\r\n\"https://lcsapi.eu.lcs.dynamics.com\"\r\n\"https://lcsapi.fr.lcs.dynamics.com\"\r\n\"https://lcsapi.sa.lcs.dynamics.com\"\r\n\"https://lcsapi.uae.lcs.dynamics.com\"\r\n\"https://lcsapi.ch.lcs.dynamics.com\"\r\n\"https://lcsapi.lcs.dynamics.cn\"\r\n\"https://lcsapi.gov.lcs.microsoftdynamics.us\"\nDefault value can be configured using Set-D365LcsApiConfig",
+                           "URI / URL to the LCS API you want to use\nThe value depends on where your LCS project is located. There are multiple valid URI\u0027s / URL\u0027s\nValid options:\r\n\"https://lcsapi.lcs.dynamics.com\"\r\n\"https://lcsapi.eu.lcs.dynamics.com\"\r\n\"https://lcsapi.fr.lcs.dynamics.com\"\r\n\"https://lcsapi.sa.lcs.dynamics.com\"\r\n\"https://lcsapi.uae.lcs.dynamics.com\"\r\n\"https://lcsapi.ch.lcs.dynamics.com\"\r\n\"https://lcsapi.no.lcs.dynamics.com\"\r\n\"https://lcsapi.lcs.dynamics.cn\"\r\n\"https://lcsapi.gov.lcs.microsoftdynamics.us\"\nDefault value can be configured using Set-D365LcsApiConfig",
                            "",
                            false,
                            "false",
@@ -7857,7 +8001,7 @@
                        ],
                        [
                            "LcsApiUri",
-                           "URI / URL to the LCS API you want to use\nDepending on whether your LCS project is located in europe or not, there is 2 valid URI\u0027s / URL\u0027s\nValid options:\r\n\"https://lcsapi.lcs.dynamics.com\"\r\n\"https://lcsapi.eu.lcs.dynamics.com\"\r\n\"https://lcsapi.fr.lcs.dynamics.com\"\r\n\"https://lcsapi.sa.lcs.dynamics.com\"\r\n\"https://lcsapi.uae.lcs.dynamics.com\"\r\n\"https://lcsapi.ch.lcs.dynamics.com\"\r\n\"https://lcsapi.lcs.dynamics.cn\"\r\n\"https://lcsapi.gov.lcs.microsoftdynamics.us\"\nDefault value can be configured using Set-D365LcsApiConfig",
+                           "URI / URL to the LCS API you want to use\nThe value depends on where your LCS project is located. There are multiple valid URI\u0027s / URL\u0027s\nValid options:\r\n\"https://lcsapi.lcs.dynamics.com\"\r\n\"https://lcsapi.eu.lcs.dynamics.com\"\r\n\"https://lcsapi.fr.lcs.dynamics.com\"\r\n\"https://lcsapi.sa.lcs.dynamics.com\"\r\n\"https://lcsapi.uae.lcs.dynamics.com\"\r\n\"https://lcsapi.ch.lcs.dynamics.com\"\r\n\"https://lcsapi.no.lcs.dynamics.com\"\r\n\"https://lcsapi.lcs.dynamics.cn\"\r\n\"https://lcsapi.gov.lcs.microsoftdynamics.us\"\nDefault value can be configured using Set-D365LcsApiConfig",
                            "",
                            false,
                            "false",
@@ -8511,7 +8655,7 @@
         "Params":  [
                        [
                            "Path",
-                           "Path to the update package that you want to install into the environment\nThe cmdlet only supports a path to an unblocked zip-file",
+                           "Path to the update package that you want to install into the environment\nThe cmdlet supports a path to a zip-file or directory with the unpacked contents.",
                            "File,Hotfix",
                            true,
                            "false",
@@ -8595,7 +8739,7 @@
         "Synopsis":  "Invoke the AxUpdateInstaller.exe file from Software Deployable Package (SDP)",
         "Name":  "Invoke-D365SDPInstall",
         "Links":  null,
-        "Examples":  "-------------------------- EXAMPLE 1 --------------------------\nPS C:\\\u003eInvoke-D365SDPInstall -Path \"c:\\temp\\\" -QuickInstallAll\nThis will install the extracted package in c:\\temp\\ using a runbook in memory while executing.\n-------------------------- EXAMPLE 2 --------------------------\nPS C:\\\u003eInvoke-D365SDPInstall -Path \"c:\\temp\\\" -DevInstall\nThis will install the extracted package in c:\\temp\\ using a runbook in memory while executing.\nThis command is to be used on Microsoft Hosted Tier1 development environment, where you don\u0027t have access to the administrator user account on the vm.\n-------------------------- EXAMPLE 3 --------------------------\nPS C:\\\u003eInvoke-D365SDPInstall -Path \"c:\\temp\\\" -Command SetTopology\nPS C:\\\u003e Invoke-D365SDPInstall -Path \"c:\\temp\\\" -Command Generate -RunbookId \u0027MyRunbook\u0027\r\nPS C:\\\u003e Invoke-D365SDPInstall -Path \"c:\\temp\\\" -Command Import -RunbookId \u0027MyRunbook\u0027\r\nPS C:\\\u003e Invoke-D365SDPInstall -Path \"c:\\temp\\\" -Command Execute -RunbookId \u0027MyRunbook\u0027\nManual operations that first create Topology XML from current environment, then generate runbook with id \u0027MyRunbook\u0027, then import it and finally execute it.\n-------------------------- EXAMPLE 4 --------------------------\nPS C:\\\u003eInvoke-D365SDPInstall -Path \"c:\\temp\\\" -Command RunAll\nCreate Topology XML from current environment. Using default runbook id \u0027Runbook\u0027 and run all the operations from generate, to import to execute.\n-------------------------- EXAMPLE 5 --------------------------\nPS C:\\\u003eInvoke-D365SDPInstall -Path \"c:\\temp\\\" -Command RerunStep -Step 18 -RunbookId \u0027MyRunbook\u0027\nRerun runbook with id \u0027MyRunbook\u0027 from step 18.\n-------------------------- EXAMPLE 6 --------------------------\nPS C:\\\u003eInvoke-D365SDPInstall -Path \"c:\\temp\\\" -Command SetStepComplete -Step 24 -RunbookId \u0027MyRunbook\u0027\nMark step 24 complete in runbook with id \u0027MyRunbook\u0027 and continue the runbook from the next step.",
+        "Examples":  "-------------------------- EXAMPLE 1 --------------------------\nPS C:\\\u003eInvoke-D365SDPInstall -Path \"c:\\temp\\package.zip\" -QuickInstallAll\nThis will install the package contained in the c:\\temp\\package.zip file using a runbook in memory while executing.\n-------------------------- EXAMPLE 2 --------------------------\nPS C:\\\u003eInvoke-D365SDPInstall -Path \"c:\\temp\\\" -DevInstall\nThis will install the extracted package in c:\\temp\\ using a runbook in memory while executing.\nThis command is to be used on Microsoft Hosted Tier1 development environment, where you don\u0027t have access to the administrator user account on the vm.\n-------------------------- EXAMPLE 3 --------------------------\nPS C:\\\u003eInvoke-D365SDPInstall -Path \"c:\\temp\\\" -Command SetTopology\nPS C:\\\u003e Invoke-D365SDPInstall -Path \"c:\\temp\\\" -Command Generate -RunbookId \u0027MyRunbook\u0027\r\nPS C:\\\u003e Invoke-D365SDPInstall -Path \"c:\\temp\\\" -Command Import -RunbookId \u0027MyRunbook\u0027\r\nPS C:\\\u003e Invoke-D365SDPInstall -Path \"c:\\temp\\\" -Command Execute -RunbookId \u0027MyRunbook\u0027\nManual operations that first create Topology XML from current environment, then generate runbook with id \u0027MyRunbook\u0027, then import it and finally execute it.\n-------------------------- EXAMPLE 4 --------------------------\nPS C:\\\u003eInvoke-D365SDPInstall -Path \"c:\\temp\\\" -Command RunAll\nCreate Topology XML from current environment. Using default runbook id \u0027Runbook\u0027 and run all the operations from generate, to import to execute.\n-------------------------- EXAMPLE 5 --------------------------\nPS C:\\\u003eInvoke-D365SDPInstall -Path \"c:\\temp\\\" -Command RerunStep -Step 18 -RunbookId \u0027MyRunbook\u0027\nRerun runbook with id \u0027MyRunbook\u0027 from step 18.\n-------------------------- EXAMPLE 6 --------------------------\nPS C:\\\u003eInvoke-D365SDPInstall -Path \"c:\\temp\\\" -Command SetStepComplete -Step 24 -RunbookId \u0027MyRunbook\u0027\nMark step 24 complete in runbook with id \u0027MyRunbook\u0027 and continue the runbook from the next step.",
         "Syntax":  "Invoke-D365SDPInstall [-Path] \u003cString\u003e [[-MetaDataDir] \u003cString\u003e] [[-QuickInstallAll]] [[-Step] \u003cInt32\u003e] [[-RunbookId] \u003cString\u003e] [-LogPath \u003cString\u003e] [-ShowOriginalProgress] [-OutputCommandOnly] [\u003cCommonParameters\u003e]\nInvoke-D365SDPInstall [-Path] \u003cString\u003e [[-MetaDataDir] \u003cString\u003e] [[-DevInstall]] [[-Step] \u003cInt32\u003e] [[-RunbookId] \u003cString\u003e] [-LogPath \u003cString\u003e] [-ShowOriginalProgress] [-OutputCommandOnly] [\u003cCommonParameters\u003e]\nInvoke-D365SDPInstall [-Path] \u003cString\u003e [[-MetaDataDir] \u003cString\u003e] [-Command] \u003cString\u003e [[-Step] \u003cInt32\u003e] [[-RunbookId] \u003cString\u003e] [-LogPath \u003cString\u003e] [-ShowOriginalProgress] [-OutputCommandOnly] [\u003cCommonParameters\u003e]"
     },
     {
@@ -8694,6 +8838,14 @@
                            false,
                            "false",
                            "False"
+                       ],
+                       [
+                           "NoPooling",
+                           "Should the connection use connection pooling or not",
+                           "",
+                           false,
+                           "false",
+                           "False"
                        ]
                    ],
         "Alias":  "Invoke-D365SqlCmd",
@@ -8701,8 +8853,8 @@
         "Synopsis":  "Execute a SQL Script or a SQL Command",
         "Name":  "Invoke-D365SqlScript",
         "Links":  null,
-        "Examples":  "-------------------------- EXAMPLE 1 --------------------------\nPS C:\\\u003eInvoke-D365SqlScript -FilePath \"C:\\temp\\d365fo.tools\\DeleteUser.sql\"\nThis will execute the \"C:\\temp\\d365fo.tools\\DeleteUser.sql\" against the registered SQL Server on the machine.\n-------------------------- EXAMPLE 2 --------------------------\nPS C:\\\u003eInvoke-D365SqlScript -Command \"DELETE FROM SALESTABLE WHERE RECID = 123456789\"\nThis will execute \"DELETE FROM SALESTABLE WHERE RECID = 123456789\" against the registered SQL Server on the machine.",
-        "Syntax":  "Invoke-D365SqlScript [-FilePath] \u003cString\u003e [-DatabaseServer \u003cString\u003e] [-DatabaseName \u003cString\u003e] [-SqlUser \u003cString\u003e] [-SqlPwd \u003cString\u003e] [-TrustedConnection \u003cBoolean\u003e] [-EnableException] [\u003cCommonParameters\u003e]\nInvoke-D365SqlScript [-Command] \u003cString\u003e [-DatabaseServer \u003cString\u003e] [-DatabaseName \u003cString\u003e] [-SqlUser \u003cString\u003e] [-SqlPwd \u003cString\u003e] [-TrustedConnection \u003cBoolean\u003e] [-EnableException] [\u003cCommonParameters\u003e]"
+        "Examples":  "-------------------------- EXAMPLE 1 --------------------------\nPS C:\\\u003eInvoke-D365SqlScript -FilePath \"C:\\temp\\d365fo.tools\\DeleteUser.sql\"\nThis will execute the \"C:\\temp\\d365fo.tools\\DeleteUser.sql\" against the registered SQL Server on the machine.\n-------------------------- EXAMPLE 2 --------------------------\nPS C:\\\u003eInvoke-D365SqlScript -Command \"DELETE FROM SALESTABLE WHERE RECID = 123456789\"\nThis will execute \"DELETE FROM SALESTABLE WHERE RECID = 123456789\" against the registered SQL Server on the machine.\n-------------------------- EXAMPLE 3 --------------------------\nPS C:\\\u003eInvoke-D365SqlScript -Command \"DELETE FROM SALESTABLE WHERE RECID = 123456789\" -NoPooling\nThis will execute \"DELETE FROM SALESTABLE WHERE RECID = 123456789\" against the registered SQL Server on the machine.\r\nIt will not use connection pooling.",
+        "Syntax":  "Invoke-D365SqlScript [-FilePath] \u003cString\u003e [-DatabaseServer \u003cString\u003e] [-DatabaseName \u003cString\u003e] [-SqlUser \u003cString\u003e] [-SqlPwd \u003cString\u003e] [-TrustedConnection \u003cBoolean\u003e] [-EnableException] [-NoPooling] [\u003cCommonParameters\u003e]\nInvoke-D365SqlScript [-Command] \u003cString\u003e [-DatabaseServer \u003cString\u003e] [-DatabaseName \u003cString\u003e] [-SqlUser \u003cString\u003e] [-SqlPwd \u003cString\u003e] [-TrustedConnection \u003cBoolean\u003e] [-EnableException] [-NoPooling] [\u003cCommonParameters\u003e]"
     },
     {
         "CommandName":  "Invoke-D365SysFlushAodCache",
@@ -10243,7 +10395,7 @@
                        ],
                        [
                            "LcsApiUri",
-                           "URI / URL to the LCS API you want to use\nDepending on whether your LCS project is located in europe or not, there is 2 valid URI\u0027s / URL\u0027s\nValid options:\r\n\"https://lcsapi.lcs.dynamics.com\"\r\n\"https://lcsapi.eu.lcs.dynamics.com\"\r\n\"https://lcsapi.fr.lcs.dynamics.com\"\r\n\"https://lcsapi.sa.lcs.dynamics.com\"\r\n\"https://lcsapi.uae.lcs.dynamics.com\"\r\n\"https://lcsapi.ch.lcs.dynamics.com\"\r\n\"https://lcsapi.lcs.dynamics.cn\"\r\n\"https://lcsapi.gov.lcs.microsoftdynamics.us\"",
+                           "URI / URL to the LCS API you want to use\nThe value depends on where your LCS project is located. There are multiple valid URI\u0027s / URL\u0027s\nValid options:\r\n\"https://lcsapi.lcs.dynamics.com\"\r\n\"https://lcsapi.eu.lcs.dynamics.com\"\r\n\"https://lcsapi.fr.lcs.dynamics.com\"\r\n\"https://lcsapi.sa.lcs.dynamics.com\"\r\n\"https://lcsapi.uae.lcs.dynamics.com\"\r\n\"https://lcsapi.ch.lcs.dynamics.com\"\r\n\"https://lcsapi.no.lcs.dynamics.com\"\r\n\"https://lcsapi.lcs.dynamics.cn\"\r\n\"https://lcsapi.gov.lcs.microsoftdynamics.us\"",
                            "resource",
                            false,
                            "true (ByPropertyName)",
