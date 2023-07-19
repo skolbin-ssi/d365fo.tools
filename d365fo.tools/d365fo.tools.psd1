@@ -3,7 +3,7 @@
 	RootModule        = 'd365fo.tools.psm1'
 
 	# Version number of this module.
-	ModuleVersion     = '0.6.78'
+	ModuleVersion     = '0.6.79'
 
 	# ID used to uniquely identify this module
 	GUID              = '7c7b26d4-f764-4cb0-a692-459a0a689dbb'
@@ -27,9 +27,9 @@
 	# this module.
 	# To enable the GitHub dependency graph, changes should be synchronized with
 	# https://github.com/d365collaborative/d365fo.tools/blob/master/.github/workflows/dependencies.yml
-	RequiredModules   = @(
-		@{ ModuleName = 'PSFramework'; ModuleVersion = '1.0.12' }
-		, @{ ModuleName = 'Azure.Storage'; ModuleVersion = '4.4.0' }
+    RequiredModules   = @(
+		  @{ ModuleName = 'PSFramework'; ModuleVersion = '1.0.12' }
+		, @{ ModuleName = 'Az.Storage'; ModuleVersion = '1.11.0' }
 		, @{ ModuleName = 'AzureAd'; ModuleVersion = '2.0.1.16' }
 		, @{ ModuleName = 'PSNotification'; ModuleVersion = '0.5.3' }
 		, @{ ModuleName = 'PSOAuthHelper'; ModuleVersion = '0.3.0' }
@@ -60,6 +60,7 @@
 		'Backup-D365WebConfig',
 
 		'Clear-D365ActiveBroadcastMessageConfig',
+		'Clear-D365BacpacObject',
 		'Clear-D365BacpacTableData',
 		'Clear-D365MonitorData',
 		'Clear-D365TempDbTables',
