@@ -13,7 +13,7 @@ Import certificates for RSAT
 ## SYNTAX
 
 ```
-Import-D365RsatSelfServiceCertificates [-Path] <Object> [-Password] <Object> [<CommonParameters>]
+Import-D365RsatSelfServiceCertificates [-Path] <String> [-Password] <String> [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -29,7 +29,7 @@ The zip file needs to be unblocked and then extracted into a folder, with only t
 Import-D365RsatSelfServiceCertificates -Path "C:\Temp\UAT" -Password "123456789"
 ```
 
-This will import the .cer and .pxf files into the correct stored, bases on the files located in "C:\Temp\UAT".
+This will import the .cer and .pxf files into the correct store, bases on the files located in "C:\Temp\UAT".
 After import it will display the thumbprint for both certificates.
 
 Sample output:
@@ -44,14 +44,14 @@ Path to the folder where the .cer and .pxf files are located
 The files needs to be extracted from the zip archive
 
 ```yaml
-Type: Object
+Type: String
 Parameter Sets: (All)
 Aliases:
 
 Required: True
 Position: 1
 Default value: None
-Accept pipeline input: False
+Accept pipeline input: True (ByPropertyName)
 Accept wildcard characters: False
 ```
 
@@ -61,14 +61,14 @@ Password for the .pxf file
 Working with self-service environments, the password will be displayed during the download of the zip archive
 
 ```yaml
-Type: Object
+Type: String
 Parameter Sets: (All)
 Aliases:
 
 Required: True
 Position: 2
 Default value: None
-Accept pipeline input: False
+Accept pipeline input: True (ByPropertyName)
 Accept wildcard characters: False
 ```
 

@@ -3,7 +3,7 @@
 	RootModule        = 'd365fo.tools.psm1'
 
 	# Version number of this module.
-	ModuleVersion     = '0.7.2'
+	ModuleVersion     = '0.7.10'
 
 	# ID used to uniquely identify this module
 	GUID              = '7c7b26d4-f764-4cb0-a692-459a0a689dbb'
@@ -57,6 +57,7 @@
 		'Backup-D365MetaDataDir',
 		'Backup-D365Runbook',
 		'Backup-D365WebConfig',
+		'Backup-D365WifConfig',
 
 		'Clear-D365ActiveBroadcastMessageConfig',
 		'Clear-D365BacpacObject',
@@ -115,6 +116,8 @@
 		'Get-D365EventTraceProvider',
 		'Get-D365ExternalIP',
 
+		'Get-D365Flight',
+		
 		'Get-D365JsonService',
 
 		'Get-D365InstalledHotfix',
@@ -136,6 +139,7 @@
 		'Get-D365LcsDeploymentStatus',
 		'Get-D365LcsEnvironmentHistory',
 		'Get-D365LcsEnvironmentMetadata',
+		'Get-D365LcsEnvironmentRsatCertificate',
 
 		'Get-D365MaintenanceMode',
 		'Get-D365Model',
@@ -156,6 +160,7 @@
 		'Get-D365RunbookLogFile',
 
 		'Get-D365SDPCleanUp',
+		'Get-D365SDPDetails',
 
 		'Get-D365Table',
 		'Get-D365TableField',
@@ -251,6 +256,7 @@
 
 		'New-D365Bacpac',
 		'New-D365CAReport',
+		'New-D365EntraIntegration',
 		'New-D365ISVLicense',
 		'New-D365ModuleToRemove',
 		'New-D365TopologyFile',
@@ -318,6 +324,8 @@
 		'Switch-D365ActiveDatabase',
 
 		'Test-D365Command',
+		'Test-D365DataverseConnection',
+		'Test-D365EntraIntegration',
 		'Test-D365FlightServiceCatalogId',
 		'Test-D365LabelIdIsValid',
 						

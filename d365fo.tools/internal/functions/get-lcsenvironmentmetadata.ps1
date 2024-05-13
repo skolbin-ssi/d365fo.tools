@@ -8,7 +8,6 @@
         
         It supports listing all environments, but also supports single / specific environments by searching based on EnvironmentId or EnvironmentName
         
-        
     .PARAMETER ProjectId
         The project id for the Dynamics 365 for Finance & Operations project inside LCS
         
@@ -28,7 +27,6 @@
         The Id can be located inside the LCS portal
         
         Either you want to utilize the EnvironmentName parameter or you can utilize the EnvironmentId parameter, only one of them is valid in a request
-        
         
     .PARAMETER Page
         Page number that you want to request from the LCS API

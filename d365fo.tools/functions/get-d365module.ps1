@@ -143,7 +143,12 @@ function Get-D365Module {
 
         Write-PSFMessage -Level Verbose -Message "MetadataProvider initialized." -Target $metadataProviderViaRuntime
 
-        $modules = $metadataProviderViaRuntime.ModelManifest.ListModulesInDependencyOrder()
+        try {
+            $modules = $metadataProviderViaRuntime.ModelManifest.ListModulesInDependencyOrder()
+        } catch {
+            Write-PSFMessage -Level Warning -Message "Failed to retrieve runtime modules in dependency order. Falling back to ListModules()." -Target $metadataProviderViaRuntime
+            $modules = $metadataProviderViaRuntime.ModelManifest.ListModules()
+        }
 
         $modules | ForEach-Object {
             $_ | Add-Member -MemberType NoteProperty -Name 'IsBinary' -Value $false
@@ -157,7 +162,7 @@ function Get-D365Module {
             $diskProviderConfiguration = New-Object Microsoft.Dynamics.AX.Metadata.Storage.DiskProvider.DiskProviderConfiguration
             $diskProviderConfiguration.AddMetadataPath($PackageDirectory)
             $metadataProviderFactoryViaDisk = New-Object Microsoft.Dynamics.AX.Metadata.Storage.MetadataProviderFactory
-            $metadataProviderViaDisk = $metadataProviderFactoryViaDisk.CreateDiskProvider($diskProviderConfiguration)
+            $metadataProviderViaDisk = $metadataProviderFactoryViaDisk.CreateDiskProvider($diskProviderConfiguration, $metadataProviderViaRuntime.ModelManifest)
 
             Write-PSFMessage -Level Verbose -Message "MetadataProvider initialized." -Target $metadataProviderViaDisk
 

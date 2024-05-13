@@ -21,7 +21,7 @@
     .EXAMPLE
         PS C:\> Import-D365RsatSelfServiceCertificates -Path "C:\Temp\UAT" -Password "123456789"
         
-        This will import the .cer and .pxf files into the correct stored, bases on the files located in "C:\Temp\UAT".
+        This will import the .cer and .pxf files into the correct store, bases on the files located in "C:\Temp\UAT".
         After import it will display the thumbprint for both certificates.
         
         Sample output:
@@ -37,20 +37,28 @@ function Import-D365RsatSelfServiceCertificates {
     [Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSUseSingularNouns", "")]
     [CmdletBinding()]
     param (
-        [Parameter(Mandatory = $true)]
-        $Path,
+        [Parameter(
+            Mandatory = $true,
+            ValueFromPipelineByPropertyName = $true)]
+        [ValidateNotNullOrEmpty()]
+        [string] $Path,
 
-        [Parameter(Mandatory = $true)]
-        $Password
+        [Parameter(
+            Mandatory = $true,
+            ValueFromPipelineByPropertyName = $true)]
+        [ValidateNotNullOrEmpty()]
+        [string] $Password
     )
     
     begin {
-        [Security.SecureString] $PasswordSecure = (ConvertTo-SecureString -String $Password -Force -AsPlainText)
-
-        if (-not (Test-PathExists -Path $Path -Type Container)) { return }
+        
     }
     
     process {
+        [Security.SecureString] $PasswordSecure = (ConvertTo-SecureString -String $Password -Force -AsPlainText)
+    
+        if (-not (Test-PathExists -Path $Path -Type Container)) { return }
+
         if (Test-PSFFunctionInterrupt) { return }
 
         $pathCertFile = (Get-ChildItem -Path "$Path\*.cer" | Select-Object -First 1).FullName
