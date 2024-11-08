@@ -1,11 +1,11 @@
 ﻿
 <#
     .SYNOPSIS
-        Invoke the AxUpdateInstaller.exe file from Software Deployable Package (SDP)
+        Install a Software Deployable Package (SDP)
         
     .DESCRIPTION
         A cmdlet that wraps some of the cumbersome work into a streamlined process.
-        The process are detailed in the Microsoft documentation here:
+        The process for a legacy (i.e. non unified) environment are detailed in the Microsoft documentation here:
         https://docs.microsoft.com/en-us/dynamics365/unified-operations/dev-itpro/deployment/install-deployable-package
         
     .PARAMETER Path
@@ -63,6 +63,15 @@
         
         Will include full path to the executable and the needed parameters based on your selection
         
+    .PARAMETER TopologyFile
+        Provide a custom topology file to use. By default, the cmdlet will use the DefaultTopologyData.xml file in the package directory.
+        
+    .PARAMETER UseExistingTopologyFile
+        Use this switch to indicate that the topology file is already updated and should not be updated again.
+        
+    .PARAMETER UnifiedDevelopmentEnvironment
+        Use this switch to install the package in a Unified Development Environment (UDE).
+        
     .EXAMPLE
         PS C:\> Invoke-D365SDPInstall -Path "c:\temp\package.zip" -QuickInstallAll
         
@@ -98,12 +107,29 @@
         
         Mark step 24 complete in runbook with id 'MyRunbook' and continue the runbook from the next step.
         
+    .EXAMPLE
+        PS C:\> Invoke-D365SDPInstall -Path "c:\temp\" -Command SetTopology -TopologyFile "c:\temp\MyTopology.xml"
+        
+        Update the MyTopology.xml file with all the installed services on the machine.
+        
+    .EXAMPLE
+        PS C:\> Invoke-D365SDPInstall -Path "c:\temp\" -Command RunAll -TopologyFile "c:\temp\MyTopology.xml" -UseExistingTopologyFile
+        
+        Run all manual steps in one single operation using the MyTopology.xml file. The topology file is not updated.
+        
+    .EXAMPLE
+        PS C:\> Invoke-D365SDPInstall -Path "c:\temp\" -MetaDataDir "c:\MyRepository\Metadata" -UnifiedDevelopmentEnvironment
+        
+        Install the modules contained in the c:\temp\ directory into the c:\MyRepository\Metadata directory.
         
     .NOTES
         Author: Tommy Skaue (@skaue)
         Author: Mötz Jensen (@Splaxi)
         
         Inspired by blogpost http://dev.goshoom.net/en/2016/11/installing-deployable-packages-with-powershell/
+        
+    .LINK
+        Invoke-D365SDPInstallUDE
         
 #>
 function Invoke-D365SDPInstall {
@@ -138,8 +164,20 @@ function Invoke-D365SDPInstall {
 
         [switch] $ShowOriginalProgress,
 
-        [switch] $OutputCommandOnly
+        [switch] $OutputCommandOnly,
+
+        [string] $TopologyFile = "DefaultTopologyData.xml",
+        
+        [switch] $UseExistingTopologyFile,
+
+        [Parameter(ParameterSetName = 'UDEInstall')]
+        [switch] $UnifiedDevelopmentEnvironment
     )
+
+    if ($UnifiedDevelopmentEnvironment) {
+        Invoke-D365SDPInstallUDE -Path $Path -MetaDataDir $MetaDataDir -LogPath $LogPath
+        return
+    }
     
     if ((Get-Process -Name "devenv" -ErrorAction SilentlyContinue).Count -gt 0) {
         Write-PSFMessage -Level Host -Message "It seems that you have a <c='em'>Visual Studio</c> running. Please ensure <c='em'>exit</c> Visual Studio and run the cmdlet again."
@@ -189,10 +227,12 @@ function Invoke-D365SDPInstall {
         $Path = $absolutePath
     }
 
-    # $Util = Join-Path $Path "AXUpdateInstaller.exe"
     $executable = Join-Path $Path "AXUpdateInstaller.exe"
 
-    $topologyFile = Join-Path $Path 'DefaultTopologyData.xml'
+    
+    if (-not ([System.IO.Path]::IsPathRooted($TopologyFile) -or (Split-Path -Path $TopologyFile -IsAbsolute))) {
+        $TopologyFile = Join-Path -Path $Path -ChildPath $TopologyFile
+    }
 
     if (-not (Test-PathExists -Path $topologyFile, $executable -Type Leaf)) { return }
         
@@ -214,46 +254,49 @@ function Invoke-D365SDPInstall {
         $Command = $Command.ToLowerInvariant()
         $runbookFile = Join-Path $Path "$runbookId.xml"
         $serviceModelFile = Join-Path $Path 'DefaultServiceModelData.xml'
-        $topologyFile = Join-Path $Path 'DefaultTopologyData.xml'
                         
         if ($Command -eq 'runall') {
             Write-PSFMessage -Level Verbose "Running all manual steps in one single operation"
 
             #Update topology file (first command)
-            $ok = Update-TopologyFile -Path $Path
-
-            if ($ok) {
-                $params = @(
-                    "generate"
-                    "-runbookId=`"$runbookId`""
-                    "-topologyFile=`"$topologyFile`""
-                    "-serviceModelFile=`"$serviceModelFile`""
-                    "-runbookFile=`"$runbookFile`""
-                )
-                
-                #Generate (second command)
-                Invoke-Process -Executable $executable -Params $params -ShowOriginalProgress:$ShowOriginalProgress -OutputCommandOnly:$OutputCommandOnly -LogPath $LogPath
-
-                if (Test-PSFFunctionInterrupt) { return }
-
-                $params = @(
-                    "import"
-                    "-runbookFile=`"$runbookFile`""
-                )
-
-                Invoke-Process -Executable $executable -Params $params -ShowOriginalProgress:$ShowOriginalProgress -OutputCommandOnly:$OutputCommandOnly -LogPath $LogPath
-
-                if (Test-PSFFunctionInterrupt) { return }
-
-                $params = @(
-                    "execute"
-                    "-runbookId=`"$runbookId`""
-                )
-
-                Invoke-Process -Executable $executable -Params $params -ShowOriginalProgress:$ShowOriginalProgress -OutputCommandOnly:$OutputCommandOnly -LogPath $LogPath
-
-                if (Test-PSFFunctionInterrupt) { return }
+            if (-not $UseExistingTopologyFile) {
+                $ok = Update-TopologyFile -Path $Path -TopologyFile $TopologyFile
+                if (-not $ok) {
+                    Write-PSFMessage -Level Warning "Failed to update topology file."
+                    return
+                }
             }
+
+            $params = @(
+                "generate"
+                "-runbookId=`"$runbookId`""
+                "-topologyFile=`"$topologyFile`""
+                "-serviceModelFile=`"$serviceModelFile`""
+                "-runbookFile=`"$runbookFile`""
+            )
+            
+            #Generate (second command)
+            Invoke-Process -Executable $executable -Params $params -ShowOriginalProgress:$ShowOriginalProgress -OutputCommandOnly:$OutputCommandOnly -LogPath $LogPath
+
+            if (Test-PSFFunctionInterrupt) { return }
+
+            $params = @(
+                "import"
+                "-runbookFile=`"$runbookFile`""
+            )
+
+            Invoke-Process -Executable $executable -Params $params -ShowOriginalProgress:$ShowOriginalProgress -OutputCommandOnly:$OutputCommandOnly -LogPath $LogPath
+
+            if (Test-PSFFunctionInterrupt) { return }
+
+            $params = @(
+                "execute"
+                "-runbookId=`"$runbookId`""
+            )
+
+            Invoke-Process -Executable $executable -Params $params -ShowOriginalProgress:$ShowOriginalProgress -OutputCommandOnly:$OutputCommandOnly -LogPath $LogPath
+
+            if (Test-PSFFunctionInterrupt) { return }
 
             Write-PSFMessage -Level Verbose "All manual steps complete."
         }
@@ -263,7 +306,14 @@ function Invoke-D365SDPInstall {
                 'settopology' {
                     Write-PSFMessage -Level Verbose "Updating topology file xml."
                    
-                    $ok = Update-TopologyFile -Path $Path
+                    if ($UseExistingTopologyFile) {
+                        Write-PSFMessage -Level Warning "The SetTopology command is used to update a topology file. The UseExistingTopologyFile switch should not be used with this command."
+                        return
+                    }
+                    $ok = Update-TopologyFile -Path $Path -TopologyFile $TopologyFile
+                    if (-not $ok) {
+                        Write-PSFMessage -Level Warning "Failed to update topology file."
+                    }
                     $RunCommand = $false
                 }
                 'generate' {

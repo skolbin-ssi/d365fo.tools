@@ -8,7 +8,7 @@
 	
 	Describe "Ensuring unchanged command signature" {
 		It "should have the expected parameter sets" {
-			(Get-Command Invoke-D365SDPInstall).ParameterSets.Name | Should -Be 'QuickInstall', 'DevInstall', 'Manual'
+			(Get-Command Invoke-D365SDPInstall).ParameterSets.Name | Should -Be 'QuickInstall', 'DevInstall', 'Manual', 'UDEInstall'
 		}
 		
 		It 'Should have the expected parameter Path' {
@@ -141,24 +141,69 @@
 			$parameter.ParameterSets['__AllParameterSets'].ValueFromPipelineByPropertyName | Should -Be $False
 			$parameter.ParameterSets['__AllParameterSets'].ValueFromRemainingArguments | Should -Be $False
 		}
+		It 'Should have the expected parameter TopologyFile' {
+			$parameter = (Get-Command Invoke-D365SDPInstall).Parameters['TopologyFile']
+			$parameter.Name | Should -Be 'TopologyFile'
+			$parameter.ParameterType.ToString() | Should -Be System.String
+			$parameter.IsDynamic | Should -Be $False
+			$parameter.ParameterSets.Keys | Should -Be '__AllParameterSets'
+			$parameter.ParameterSets.Keys | Should -Contain '__AllParameterSets'
+			$parameter.ParameterSets['__AllParameterSets'].IsMandatory | Should -Be $False
+			$parameter.ParameterSets['__AllParameterSets'].Position | Should -Be -2147483648
+			$parameter.ParameterSets['__AllParameterSets'].ValueFromPipeline | Should -Be $False
+			$parameter.ParameterSets['__AllParameterSets'].ValueFromPipelineByPropertyName | Should -Be $False
+			$parameter.ParameterSets['__AllParameterSets'].ValueFromRemainingArguments | Should -Be $False
+		}
+		It 'Should have the expected parameter UseExistingTopologyFile' {
+			$parameter = (Get-Command Invoke-D365SDPInstall).Parameters['UseExistingTopologyFile']
+			$parameter.Name | Should -Be 'UseExistingTopologyFile'
+			$parameter.ParameterType.ToString() | Should -Be System.Management.Automation.SwitchParameter
+			$parameter.IsDynamic | Should -Be $False
+			$parameter.ParameterSets.Keys | Should -Be '__AllParameterSets'
+			$parameter.ParameterSets.Keys | Should -Contain '__AllParameterSets'
+			$parameter.ParameterSets['__AllParameterSets'].IsMandatory | Should -Be $False
+			$parameter.ParameterSets['__AllParameterSets'].Position | Should -Be -2147483648
+			$parameter.ParameterSets['__AllParameterSets'].ValueFromPipeline | Should -Be $False
+			$parameter.ParameterSets['__AllParameterSets'].ValueFromPipelineByPropertyName | Should -Be $False
+			$parameter.ParameterSets['__AllParameterSets'].ValueFromRemainingArguments | Should -Be $False
+		}
+		It 'Should have the expected parameter UnifiedDevelopmentEnvironment' {
+			$parameter = (Get-Command Invoke-D365SDPInstall).Parameters['UnifiedDevelopmentEnvironment']
+			$parameter.Name | Should -Be 'UnifiedDevelopmentEnvironment'
+			$parameter.ParameterType.ToString() | Should -Be System.Management.Automation.SwitchParameter
+			$parameter.IsDynamic | Should -Be $False
+			$parameter.ParameterSets.Keys | Should -Be 'UDEInstall'
+			$parameter.ParameterSets.Keys | Should -Contain 'UDEInstall'
+			$parameter.ParameterSets['UDEInstall'].IsMandatory | Should -Be $False
+			$parameter.ParameterSets['UDEInstall'].Position | Should -Be -2147483648
+			$parameter.ParameterSets['UDEInstall'].ValueFromPipeline | Should -Be $False
+			$parameter.ParameterSets['UDEInstall'].ValueFromPipelineByPropertyName | Should -Be $False
+			$parameter.ParameterSets['UDEInstall'].ValueFromRemainingArguments | Should -Be $False
+		}
 	}
 	
 	Describe "Testing parameterset QuickInstall" {
 		<#
 		QuickInstall -Path
-		QuickInstall -Path -MetaDataDir -QuickInstallAll -Step -RunbookId -LogPath -ShowOriginalProgress -OutputCommandOnly
+		QuickInstall -Path -MetaDataDir -QuickInstallAll -Step -RunbookId -LogPath -ShowOriginalProgress -OutputCommandOnly -TopologyFile -UseExistingTopologyFile
 		#>
 	}
  	Describe "Testing parameterset DevInstall" {
 		<#
 		DevInstall -Path
-		DevInstall -Path -MetaDataDir -DevInstall -Step -RunbookId -LogPath -ShowOriginalProgress -OutputCommandOnly
+		DevInstall -Path -MetaDataDir -DevInstall -Step -RunbookId -LogPath -ShowOriginalProgress -OutputCommandOnly -TopologyFile -UseExistingTopologyFile
 		#>
 	}
  	Describe "Testing parameterset Manual" {
 		<#
 		Manual -Path -Command
-		Manual -Path -MetaDataDir -Command -Step -RunbookId -LogPath -ShowOriginalProgress -OutputCommandOnly
+		Manual -Path -MetaDataDir -Command -Step -RunbookId -LogPath -ShowOriginalProgress -OutputCommandOnly -TopologyFile -UseExistingTopologyFile
+		#>
+	}
+ 	Describe "Testing parameterset UDEInstall" {
+		<#
+		UDEInstall -Path
+		UDEInstall -Path -MetaDataDir -Step -RunbookId -LogPath -ShowOriginalProgress -OutputCommandOnly -TopologyFile -UseExistingTopologyFile -UnifiedDevelopmentEnvironment
 		#>
 	}
 
